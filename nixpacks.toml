@@ -1,0 +1,15 @@
+# Railway build plan.
+# The web app is built during the build phase; the API serves it at runtime,
+# so the whole product is one service on one URL.
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+cmds = ["npm --prefix server install --omit=dev", "npm --prefix web install"]
+
+[phases.build]
+# The browser calls the API on the same origin, so a relative path is correct.
+cmds = ["cd web && VITE_API_URL=/api/v1 npm run build"]
+
+[start]
+cmd = "npm start"

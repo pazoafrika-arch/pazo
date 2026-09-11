@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "description": "Pazo partner platform - API and web app",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "install:all": "cd server && npm install && cd ../web && npm install",
-    "setup": "cd server && npm run setup",
-    "dev:api": "cd server && npm run dev",
-    "dev:web": "cd web && npm run dev",
-    "build": "cd web && npm run build",
-    "start": "cd server && npm start"
+    "install:all": "npm --prefix server install && npm --prefix web install",
+    "build": "npm --prefix server install --omit=dev && npm --prefix web install && npm --prefix web run build",
+    "start": "npm --prefix server run migrate && node server/src/index.js",
+    "setup": "npm --prefix server run setup",
+    "dev:api": "npm --prefix server run dev",
+    "dev:web": "npm --prefix web run dev",
+    "seed": "npm --prefix server run seed"
   }
 }

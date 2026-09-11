@@ -55,20 +55,29 @@ function splitStatements(sql) {
 async function main() {
   console.log(`\n  Connecting to MySQL at ${env.db.host}:${env.db.port} as ${env.db.user}`);
 
-  const root = await mysql.createConnection({
-    host: env.db.host,
-    port: env.db.port,
-    user: env.db.user,
-    password: env.db.password,
-    multipleStatements: true,
-  });
-
-  await root.query(
-    `CREATE DATABASE IF NOT EXISTS \`${env.db.database}\`
-       CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
-  );
-  console.log(`  Database "${env.db.database}" ready`);
-  await root.end();
+  // On a managed platform the database already exists and the supplied user
+  // has no rights to create one. Attempt it, but treat a refusal as fine.
+  try {
+    const root = await mysql.createConnection({
+      host: env.db.host,
+      port: env.db.port,
+      user: env.db.user,
+      password: env.db.password,
+      multipleStatements: true,
+    });
+    await root.query(
+      `CREATE DATABASE IF NOT EXISTS \`${env.db.database}\`
+         CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
+    );
+    console.log(`  Database "${env.db.database}" ready`);
+    await root.end();
+  } catch (err) {
+    if (err.code === 'ER_DBACCESS_DENIED_ERROR' || err.code === 'ER_SPECIFIC_ACCESS_DENIED_ERROR') {
+      console.log(`  Using the existing database "${env.db.database}"`);
+    } else {
+      throw err;
+    }
+  }
 
   const conn = await mysql.createConnection({
     host: env.db.host,

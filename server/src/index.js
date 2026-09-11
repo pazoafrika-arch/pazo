@@ -1,4 +1,7 @@
 import express from 'express';
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -139,10 +142,40 @@ app.get(`${API}/integrations/docs`, (req, res) =>
   }),
 );
 
+/**
+ * Serve the built front end from the same process when it is present.
+ *
+ * On a platform like Railway this makes the whole product one deployment on
+ * one URL, with no cross-origin setup. On a server where nginx serves the
+ * static files, this block simply never triggers.
+ */
+const here = path.dirname(fileURLToPath(import.meta.url));
+const WEB_DIST = path.resolve(here, '../../web/dist');
+
+if (fs.existsSync(path.join(WEB_DIST, 'index.html'))) {
+  console.log(`  Serving the web app from ${WEB_DIST}`);
+
+  // Hashed asset filenames never change, so they can be cached hard.
+  app.use(
+    '/assets',
+    express.static(path.join(WEB_DIST, 'assets'), {
+      immutable: true,
+      maxAge: '1y',
+    }),
+  );
+  app.use(express.static(WEB_DIST, { index: false, maxAge: '1h' }));
+
+  // Any path that is not an API route is handled by the single-page app.
+  app.get(/^(?!\/api|\/r\/|\/health).*/, (req, res) =>
+    res.sendFile(path.join(WEB_DIST, 'index.html')),
+  );
+}
+
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const server = app.listen(env.port, () => {
+// Hosting platforms assign the port and require binding on all interfaces.
+const server = app.listen(env.port, '0.0.0.0', () => {
   console.log(`\n  Pazo API listening on http://localhost:${env.port}`);
   console.log(`  Environment: ${env.nodeEnv}`);
   console.log(`  Database:    ${env.db.user}@${env.db.host}:${env.db.port}/${env.db.database}\n`);
