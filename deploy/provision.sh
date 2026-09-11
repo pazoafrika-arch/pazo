@@ -20,15 +20,36 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-say "Updating the system"
+say "Updating package lists"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -y
-apt-get upgrade -y
+# Deliberately NOT running a full upgrade. This server may already be serving
+# another site, and upgrading everything mid-flight can restart services.
+# Security patches are handled by unattended-upgrades below.
 
 say "Installing base packages"
-apt-get install -y \
+# --no-install-recommends keeps the footprint small on a 1GB box. Packages
+# already present are left exactly as they are.
+apt-get install -y --no-install-recommends \
   curl ca-certificates gnupg git ufw fail2ban unattended-upgrades \
   nginx mysql-server certbot python3-certbot-nginx
+
+say "Adding swap space"
+# A 1GB server runs out of memory building the front end. 2GB of swap makes
+# the build reliable and costs nothing but a little disk.
+if ! swapon --show | grep -q '/swapfile'; then
+  fallocate -l 2G /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  grep -q '/swapfile' /etc/fstab || echo '/swapfile none swap sw 0 0' >>/etc/fstab
+  echo 'vm.swappiness=10' >/etc/sysctl.d/99-pazo-swap.conf
+  sysctl -p /etc/sysctl.d/99-pazo-swap.conf >/dev/null
+  echo "  2GB swap added"
+else
+  echo "  swap already present"
+fi
+free -h
 
 say "Installing Node.js ${NODE_MAJOR}"
 curl -fsSL "https://deb.nodesource.com/setup_${NODE_MAJOR}.x" | bash -
@@ -53,17 +74,28 @@ pazo ALL=(root) NOPASSWD: /bin/systemctl restart pazo-api, /bin/systemctl status
 SUDO
 chmod 440 /etc/sudoers.d/pazo-service
 
-say "Hardening SSH"
-# Key-only login, no root shell. Assumes your key is already installed.
-sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
-sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-sed -i 's/^#\?PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
-systemctl restart ssh || systemctl restart sshd
+say "Checking SSH configuration"
+# SSH is NOT changed automatically. On a server you are already using, a bad
+# SSH change locks you out permanently. This only reports what is set.
+if grep -qE '^PasswordAuthentication\s+no' /etc/ssh/sshd_config; then
+  echo "  Password login is already disabled. Good."
+else
+  echo "  NOTE: SSH still accepts passwords."
+  echo "  Once you have confirmed key-based login works, disable it with:"
+  echo "    sudo sed -i 's/^#\\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config"
+  echo "    sudo systemctl restart ssh"
+fi
 
 say "Configuring the firewall"
+# Rules are added, never reset, so anything the existing site needs keeps
+# working. SSH is allowed first so enabling the firewall cannot lock you out.
 ufw allow OpenSSH
 ufw allow 'Nginx Full'
-ufw --force enable
+if ufw status | grep -q "Status: active"; then
+  echo "  Firewall was already active; rules added."
+else
+  ufw --force enable
+fi
 ufw status verbose
 
 say "Enabling fail2ban and automatic security updates"
@@ -71,24 +103,26 @@ systemctl enable --now fail2ban
 dpkg-reconfigure -f noninteractive unattended-upgrades
 
 say "Securing MySQL"
-# mysql_secure_installation is interactive; do the same work directly.
+# Only removes anonymous users and the sample 'test' database. Existing
+# databases and users belonging to other sites are never touched.
 mysql <<'SQL'
 DELETE FROM mysql.user WHERE User='';
-DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost','127.0.0.1','::1');
 DROP DATABASE IF EXISTS test;
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 FLUSH PRIVILEGES;
 SQL
 
 # MySQL listens on localhost only. Nothing outside the box can reach it.
+# Only the settings Pazo depends on. Kept minimal because another
+# application may share this MySQL instance.
 cat >/etc/mysql/mysql.conf.d/99-pazo.cnf <<'CNF'
 [mysqld]
 bind-address = 127.0.0.1
-# The application stores and compares every timestamp in UTC.
+# Pazo stores and compares every timestamp in UTC. Without this, scheduled
+# payout retries fire hours late and date filters cover the wrong window.
 default-time-zone = '+00:00'
 character-set-server = utf8mb4
 collation-server = utf8mb4_unicode_ci
-max_connections = 200
 CNF
 systemctl restart mysql
 

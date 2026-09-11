@@ -97,7 +97,9 @@ say "Building the web app"
 sudo -u "$DEPLOY_USER" sh -c "cd '$APP_DIR/web' && printf 'VITE_API_URL=/api/v1\n' > .env.production"
 sudo -u "$DEPLOY_USER" npm --prefix "$APP_DIR/web" ci 2>/dev/null \
   || sudo -u "$DEPLOY_USER" npm --prefix "$APP_DIR/web" install
-sudo -u "$DEPLOY_USER" npm --prefix "$APP_DIR/web" run build
+# Cap the build's heap. On a 1GB server an uncapped build gets killed.
+sudo -u "$DEPLOY_USER" env NODE_OPTIONS=--max-old-space-size=768 \
+  npm --prefix "$APP_DIR/web" run build
 
 say "Installing the systemd service"
 cat >/etc/systemd/system/pazo-api.service <<EOF
@@ -188,7 +190,19 @@ server {
 EOF
 
 ln -sf /etc/nginx/sites-available/pazo /etc/nginx/sites-enabled/pazo
-rm -f /etc/nginx/sites-enabled/default
+
+# The default placeholder page is removed only if it is still the stock one.
+# Any other site on this server is left completely alone: nginx serves each
+# by its own domain name, so they coexist.
+if [ -L /etc/nginx/sites-enabled/default ] \
+   && grep -q "Welcome to nginx" /var/www/html/index.nginx-debian.html 2>/dev/null; then
+  rm -f /etc/nginx/sites-enabled/default
+  echo "  Removed the stock nginx placeholder."
+fi
+
+echo "  Sites now enabled:"
+ls -1 /etc/nginx/sites-enabled/ | sed 's/^/    /'
+
 nginx -t
 systemctl reload nginx
 
