@@ -22,7 +22,7 @@ import { tzs, num } from '../lib/format.js';
  * narrow screens rather than overlapping.
  */
 
-const TEAL = '#007b84';
+const TEAL = '#01989f';
 const NAVY = '#0f3460';
 export const SERIES_COLORS = [TEAL, NAVY, '#0e9aa7', '#b45309', '#6366f1'];
 
@@ -114,7 +114,7 @@ export function DailyBarChart({ data, height = 260, money = true, color = TEAL, 
         />
         <Tooltip
           content={<ChartTooltip money={money} />}
-          cursor={{ fill: 'rgba(0,123,132,0.07)' }}
+          cursor={{ fill: 'rgba(1,152,159,0.08)' }}
         />
         <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]} maxBarSize={36} />
       </BarChart>

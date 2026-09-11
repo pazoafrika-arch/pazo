@@ -9,9 +9,11 @@
   --navy: #0d2137;
   --navy-2: #0f3460;
   --navy-3: #16456f;
-  --teal: #007b84;
-  --teal-mid: #2c6e6e;
-  --teal-deep: #005f66;
+  /* Sampled from the supplied brand artwork so the interface and the logo
+     are the same teal rather than two similar ones. */
+  --teal: #01989f;
+  --teal-mid: #037b81;
+  --teal-deep: #026168;
   --teal-light: #c8ecec;
   --teal-xlight: #eaf7f7;
 
@@ -56,7 +58,7 @@
   --blue-border: #bfdbfe;
 
   /* ---- data viz (sequential, accessible in both themes) ---- */
-  --chart-1: #007b84;
+  --chart-1: #01989f;
   --chart-2: #0f3460;
   --chart-3: #0e9aa7;
   --chart-4: #b45309;
@@ -78,7 +80,7 @@
   --shadow-md: 0 4px 14px rgba(13, 33, 55, 0.08);
   --shadow-lg: 0 12px 32px rgba(13, 33, 55, 0.12);
   --shadow-xl: 0 24px 64px rgba(13, 33, 55, 0.18);
-  --shadow-focus: 0 0 0 3px rgba(0, 123, 132, 0.18);
+  --shadow-focus: 0 0 0 3px rgba(1, 152, 159, 0.20);
 
   /* ---- type ---- */
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

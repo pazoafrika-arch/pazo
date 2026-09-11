@@ -77,17 +77,17 @@ export function buildStatementHtml({
   .tcard{background:#F0FAFA;border:1px solid rgba(13,33,55,.07);border-radius:12px;padding:16px}
   .tcard span{display:block;font-size:11.5px;color:#7A9AAA;font-weight:600;margin-bottom:5px}
   .tcard strong{font-size:19px;font-weight:800;letter-spacing:-.5px}
-  .tcard.accent strong{color:#007b84}
+  .tcard.accent strong{color:#01989f}
   table{width:100%;border-collapse:collapse;font-size:13px}
   thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:#7A9AAA;padding:12px 32px;background:#F8FAFC;border-top:1px solid rgba(13,33,55,.08);border-bottom:1px solid rgba(13,33,55,.08)}
   tbody td{padding:12px 32px;border-bottom:1px solid #F1F5F9}
   tbody tr:last-child td{border-bottom:none}
   .num{text-align:right;font-variant-numeric:tabular-nums}
-  .strong{font-weight:700;color:#007b84}
+  .strong{font-weight:700;color:#01989f}
   tfoot td{padding:16px 32px;font-weight:800;border-top:2px solid rgba(13,33,55,.1)}
   .status{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
   .paid{background:#ECFDF5;color:#059669}
-  .upcoming{background:#EAF7F7;color:#007b84}
+  .upcoming{background:#EAF7F7;color:#01989f}
   .foot{padding:20px 32px;font-size:11.5px;color:#7A9AAA;line-height:1.6;border-top:1px solid rgba(13,33,55,.08)}
   .actions{max-width:820px;margin:0 auto 16px;text-align:right}
   button{background:#0D2137;color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}

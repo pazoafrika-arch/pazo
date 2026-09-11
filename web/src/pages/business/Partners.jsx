@@ -135,7 +135,7 @@ export default function BusinessPartners() {
                           name={p.name}
                           size="sm"
                           square={p.partner_type === 'institution'}
-                          color={p.partner_type === 'institution' ? '#0f3460' : '#007b84'}
+                          color={p.partner_type === 'institution' ? '#0f3460' : '#01989f'}
                         />
                         <span>
                           {p.name}
@@ -263,7 +263,7 @@ function PartnerDrawer({ partnerId, onClose, onChanged }) {
                 name={p.name}
                 size="lg"
                 square={p.partner_type === 'institution'}
-                color={p.partner_type === 'institution' ? '#0f3460' : '#007b84'}
+                color={p.partner_type === 'institution' ? '#0f3460' : '#01989f'}
               />
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 'var(--t-lg)', fontWeight: 800, color: 'var(--navy)' }}>

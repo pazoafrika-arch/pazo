@@ -80,7 +80,7 @@ export function Badge({ status, children, tone, dot = false, className = '' }) {
 }
 
 /* ---------------- Avatar ---------------- */
-export function Avatar({ name, color = '#007b84', size = 'md', square = false }) {
+export function Avatar({ name, color = '#01989f', size = 'md', square = false }) {
   return (
     <div
       className={`avatar avatar-${size} ${square ? 'avatar-square' : ''}`}

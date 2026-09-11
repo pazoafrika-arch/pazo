@@ -114,7 +114,7 @@
   text-decoration: none;
 }
 .nav-item.active {
-  background: rgba(0, 123, 132, 0.24);
+  background: rgba(1, 152, 159, 0.26);
   color: #fff;
   font-weight: 600;
 }
@@ -376,7 +376,7 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: rgba(0, 123, 132, 0.22);
+  background: rgba(1, 152, 159, 0.24);
 }
 .hero-card::after {
   content: '';
@@ -386,7 +386,7 @@
   width: 110px;
   height: 110px;
   border-radius: 50%;
-  background: rgba(0, 123, 132, 0.13);
+  background: rgba(1, 152, 159, 0.15);
 }
 .hero-inner {
   position: relative;

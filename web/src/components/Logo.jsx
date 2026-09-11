@@ -4,8 +4,10 @@
  */
 
 export function Logo({ height = 26, tone = 'color', className = '', style }) {
-  const teal = tone === 'mono' ? 'currentColor' : '#007b84';
-  const dark = tone === 'mono' ? 'currentColor' : tone === 'light' ? '#ffffff' : '#1d3849';
+  // Sampled from the supplied brand artwork (pazo logo.png) so the rendered
+  // mark matches the source file exactly.
+  const teal = tone === 'mono' ? 'currentColor' : '#01989F';
+  const dark = tone === 'mono' ? 'currentColor' : tone === 'light' ? '#ffffff' : '#1E415C';
 
   return (
     <svg

@@ -37,7 +37,7 @@ export const hashIp = (ip) => (ip ? sha256(`pazo-click-salt:${ip}`).slice(0, 40)
 
 /** Deterministic pleasant avatar colour from the Pazo palette. */
 const AVATAR_COLORS = [
-  '#007b84',
+  '#01989f',
   '#0D2137',
   '#2C6E6E',
   '#0F3460',
