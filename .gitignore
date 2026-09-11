@@ -31,6 +31,9 @@ backups/
 Thumbs.db
 desktop.ini
 
+# Railway local link state
+.railway/
+
 # Scratch
 tmp/
 temp/

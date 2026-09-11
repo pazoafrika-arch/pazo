@@ -14,5 +14,8 @@
     "dev:api": "npm --prefix server run dev",
     "dev:web": "npm --prefix web run dev",
     "seed": "npm --prefix server run seed"
+  },
+  "devDependencies": {
+    "railway": "^3.11.0"
   }
 }
