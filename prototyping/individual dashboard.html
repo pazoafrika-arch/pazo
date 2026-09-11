@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pazo — Individual Partner</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D2137;
+  --navy2:#0F3460;
+  --teal:#007b84;
+  --teal-mid:#2C6E6E;
+  --teal-light:#C8ECEC;
+  --teal-xlight:#EAF7F7;
+  --white:#FFFFFF;
+  --bg:#F0FAFA;
+  --bg2:#E4F5F5;
+  --gray-50:#F8FAFC;
+  --gray-100:#F1F5F9;
+  --gray-200:#E2E8F0;
+  --gray-400:#94A3B8;
+  --gray-600:#475569;
+  --dark:#0D2137;
+  --border:rgba(13,33,55,0.09);
+  --green:#059669;
+  --green-light:#ECFDF5;
+  --red:#DC2626;
+  --red-light:#FEF2F2;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark)}
+
+/* ═══════════════════════════════
+   AUTH SCREENS
+═══════════════════════════════ */
+.auth-wrap{
+  min-height:100vh;
+  background:linear-gradient(150deg,#B8E8E8 0%,#D4F0F0 30%,#EAF7F7 65%,#F2FBFB 100%);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.auth-card{
+  background:rgba(255,255,255,0.82);
+  border:1px solid rgba(255,255,255,0.95);
+  border-radius:20px;
+  width:100%;max-width:420px;
+  box-shadow:0 16px 48px rgba(13,33,55,0.10);
+  backdrop-filter:blur(10px);
+  overflow:hidden;
+}
+.auth-top{
+  padding:28px 28px 20px;
+  border-bottom:1px solid var(--border);
+  text-align:center;
+}
+.auth-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px}
+.auth-logo-tag{font-size:11px;font-weight:600;color:var(--teal);background:var(--teal-xlight);border:1px solid var(--teal-light);padding:3px 10px;border-radius:10px}
+.auth-title{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.5px;margin-bottom:3px}
+.auth-sub{font-size:13px;color:var(--gray-400)}
+.auth-body{padding:24px 28px 28px}
+.fg{margin-bottom:14px}
+.fl{font-size:11.5px;font-weight:600;color:var(--gray-600);margin-bottom:5px;display:block}
+.fi{
+  width:100%;background:var(--bg);
+  border:1.5px solid var(--border);border-radius:9px;
+  padding:11px 14px;font-size:14px;font-family:'Inter',sans-serif;
+  color:var(--navy);outline:none;transition:border-color 0.15s;
+}
+.fi:focus{border-color:var(--teal);background:var(--white)}
+.fi::placeholder{color:var(--gray-400)}
+.fi-err{border-color:var(--red)!important}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-main{
+  width:100%;background:var(--navy);color:var(--white);
+  border:none;border-radius:50px;padding:13px;
+  font-size:14px;font-weight:600;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:background 0.15s;margin-top:4px;
+}
+.btn-main:hover{background:var(--navy2)}
+.btn-teal{
+  width:100%;background:var(--teal);color:var(--white);
+  border:none;border-radius:50px;padding:13px;
+  font-size:14px;font-weight:600;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:background 0.15s;margin-top:4px;
+}
+.btn-teal:hover{background:var(--teal-mid)}
+.auth-switch{text-align:center;font-size:13px;color:var(--gray-400);margin-top:16px}
+.auth-switch a{color:var(--teal);cursor:pointer;font-weight:600}
+.sdots{display:flex;gap:6px;justify-content:center;margin-bottom:20px}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--teal-light);transition:all 0.2s}
+.sdot.on{background:var(--teal);width:20px;border-radius:3px}
+.otp-row{display:flex;gap:8px;justify-content:center;margin:4px 0 8px}
+.ob{
+  width:44px;height:50px;
+  background:var(--bg);border:1.5px solid var(--border);border-radius:9px;
+  font-size:20px;font-weight:700;font-family:'Inter',sans-serif;
+  color:var(--navy);text-align:center;outline:none;transition:border-color 0.15s;
+}
+.ob:focus{border-color:var(--teal);background:var(--white)}
+.resend{font-size:12px;color:var(--gray-400);text-align:center}
+.resend a{color:var(--teal);cursor:pointer;font-weight:600}
+.info-note{
+  background:var(--teal-xlight);border:1px solid var(--teal-light);
+  border-radius:8px;padding:11px 13px;
+  font-size:12.5px;color:var(--teal-mid);line-height:1.55;margin-bottom:14px;
+}
+/* code picker */
+.code-input-wrap{position:relative}
+.code-prefix{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-size:14px;font-weight:700;color:var(--teal);
+}
+.fi-code{padding-left:36px!important;letter-spacing:2px;font-weight:700;text-transform:uppercase}
+.code-check{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:14px}
+
+/* ═══════════════════════════════
+   APP SHELL
+═══════════════════════════════ */
+.app{display:none;height:100vh;flex-direction:column;background:var(--bg)}
+.app.visible{display:flex}
+
+/* TOP BAR */
+.topbar{
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.topbar-logo{display:flex;align-items:center;gap:6px}
+.topbar-greeting{font-size:13px;color:var(--gray-400);font-weight:500}
+.topbar-greeting strong{color:var(--navy)}
+.notif-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  position:relative;
+}
+.notif-badge{
+  position:absolute;top:6px;right:6px;width:8px;height:8px;
+  border-radius:50%;background:var(--teal);border:2px solid var(--white);
+}
+
+/* MAIN CONTENT */
+.app-body{flex:1;overflow-y:auto;padding:20px}
+.app-body::-webkit-scrollbar{width:4px}
+.app-body::-webkit-scrollbar-thumb{background:var(--gray-200);border-radius:2px}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  background:var(--white);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:8px 0 12px;
+  flex-shrink:0;
+}
+.nav-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;padding:6px 4px;transition:all 0.15s;
+}
+.nav-tab-icon{font-size:20px;transition:transform 0.15s}
+.nav-tab-label{font-size:10.5px;font-weight:600;color:var(--gray-400);transition:color 0.15s}
+.nav-tab.active .nav-tab-label{color:var(--teal)}
+.nav-tab.active .nav-tab-icon{transform:scale(1.1)}
+
+/* ── SCREENS ── */
+.screen{display:none}
+.screen.active{display:block}
+
+/* ── HOME ── */
+.wallet-hero{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  border-radius:16px;padding:24px;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.wallet-hero::before{
+  content:'';position:absolute;top:-30px;right:-30px;
+  width:120px;height:120px;border-radius:50%;
+  background:rgba(0,123,132,0.2);
+}
+.wallet-hero::after{
+  content:'';position:absolute;bottom:-40px;right:20px;
+  width:90px;height:90px;border-radius:50%;
+  background:rgba(0,123,132,0.12);
+}
+.wh-label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.45);letter-spacing:0.8px;margin-bottom:6px}
+.wh-amount{font-size:36px;font-weight:800;color:var(--white);letter-spacing:-1px;margin-bottom:4px}
+.wh-sub{font-size:12px;color:rgba(255,255,255,0.4)}
+.wh-actions{display:flex;gap:10px;margin-top:20px}
+.wh-btn{
+  flex:1;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all 0.15s;
+}
+.wh-btn:hover{background:rgba(255,255,255,0.18)}
+.wh-btn-icon{font-size:16px;margin-bottom:3px}
+.wh-btn-label{font-size:11.5px;font-weight:600;color:rgba(255,255,255,0.7)}
+
+/* CODE CARD */
+.code-card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:14px;padding:20px;margin-bottom:16px;
+}
+.cc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cc-title{font-size:13px;font-weight:700;color:var(--navy)}
+.cc-see{font-size:12px;color:var(--teal);cursor:pointer;font-weight:600}
+.code-display{
+  background:var(--bg);border:1.5px dashed var(--teal-light);
+  border-radius:10px;padding:14px;text-align:center;margin-bottom:12px;
+}
+.code-val{font-size:26px;font-weight:800;color:var(--teal);letter-spacing:4px}
+.code-link-wrap{
+  background:var(--navy);border-radius:8px;padding:10px 12px;
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;
+}
+.code-link-text{font-size:11px;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.code-link-copy{font-size:11.5px;font-weight:700;color:var(--teal);cursor:pointer;flex-shrink:0;margin-left:8px}
+.code-actions-row{display:flex;gap:8px}
+.ca-btn{
+  flex:1;background:var(--bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:9px;text-align:center;cursor:pointer;
+  font-size:12px;font-weight:600;color:var(--navy);transition:all 0.15s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.ca-btn:hover{border-color:var(--teal);color:var(--teal)}
+
+/* QUICK STATS */
+.quick-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.qs-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px}
+.qs-val{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.5px}
+.qs-val.teal{color:var(--teal)}
+.qs-label{font-size:11.5px;color:var(--gray-400);margin-top:3px;font-weight:500}
+
+/* ACTIVITY */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sh-title{font-size:13.5px;font-weight:700;color:var(--navy)}
+.sh-link{font-size:12px;color:var(--teal);cursor:pointer;font-weight:600}
+.activity-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--gray-100);
+}
+.activity-item:last-child{border-bottom:none}
+.ai-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.ai-icon.earn{background:var(--green-light)}
+.ai-icon.ref{background:var(--teal-xlight)}
+.ai-body{flex:1}
+.ai-title{font-size:13px;font-weight:600;color:var(--navy)}
+.ai-sub{font-size:11.5px;color:var(--gray-400);margin-top:1px}
+.ai-amount{font-size:13.5px;font-weight:700}
+.ai-amount.pos{color:var(--green)}
+
+/* ── WALLET SCREEN ── */
+.wallet-full-hero{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  border-radius:16px;padding:24px;margin-bottom:20px;text-align:center;
+}
+.wfh-label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:0.8px;margin-bottom:8px}
+.wfh-amount{font-size:44px;font-weight:800;color:var(--white);letter-spacing:-2px;margin-bottom:4px}
+.wfh-currency{font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:20px}
+.wfh-btn{
+  background:var(--teal);color:var(--white);border:none;
+  border-radius:50px;padding:12px 32px;
+  font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;
+  transition:background 0.15s;
+}
+.wfh-btn:hover{background:var(--teal-mid)}
+.wallet-tabs{display:flex;gap:0;background:var(--gray-100);border-radius:10px;padding:3px;margin-bottom:16px}
+.wtab{
+  flex:1;text-align:center;padding:8px;border-radius:8px;
+  font-size:12.5px;font-weight:600;color:var(--gray-400);cursor:pointer;transition:all 0.15s;
+}
+.wtab.active{background:var(--white);color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.tx-item{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 0;border-bottom:1px solid var(--gray-100);
+}
+.tx-item:last-child{border-bottom:none}
+.tx-icon{
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;
+}
+.tx-icon.earn{background:var(--green-light)}
+.tx-icon.wd{background:var(--red-light)}
+.tx-body{flex:1}
+.tx-title{font-size:13px;font-weight:600;color:var(--navy)}
+.tx-date{font-size:11.5px;color:var(--gray-400);margin-top:1px}
+.tx-amount{font-size:13.5px;font-weight:700}
+.tx-amount.pos{color:var(--green)}
+.tx-amount.neg{color:var(--red)}
+.tx-badge{display:inline-flex;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:600;margin-top:2px}
+.tx-badge.done{background:var(--green-light);color:var(--green)}
+.tx-badge.pend{background:#FFF8E1;color:#B45309}
+
+/* ── REFERRAL CODE SCREEN ── */
+.ref-hero{
+  background:linear-gradient(135deg,var(--teal),var(--teal-mid));
+  border-radius:16px;padding:24px;margin-bottom:16px;text-align:center;
+}
+.rh-label{font-size:10.5px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.rh-code{font-size:38px;font-weight:800;color:var(--white);letter-spacing:6px;margin-bottom:6px}
+.rh-sub{font-size:12px;color:rgba(255,255,255,0.5)}
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.share-btn{
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:12px;padding:14px;text-align:center;cursor:pointer;transition:all 0.15s;
+}
+.share-btn:hover{border-color:var(--teal);background:var(--teal-xlight)}
+.sb-icon{font-size:22px;margin-bottom:6px}
+.sb-title{font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.sb-sub{font-size:11px;color:var(--gray-400)}
+.link-box{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:12px;padding:16px;margin-bottom:16px;
+}
+.lb-head{font-size:11.5px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.lb-url{
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;font-size:12px;color:var(--teal-mid);
+  word-break:break-all;margin-bottom:10px;line-height:1.5;
+}
+.lb-copy{
+  width:100%;background:var(--navy);color:var(--white);border:none;
+  border-radius:8px;padding:10px;font-size:13px;font-weight:600;
+  font-family:'Inter',sans-serif;cursor:pointer;transition:background 0.15s;
+}
+.lb-copy:hover{background:var(--navy2)}
+
+/* QR CARD */
+.qr-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;text-align:center}
+.qr-wrap{width:140px;height:140px;margin:0 auto 14px;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:center}
+.qr-dl{
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:10px;font-size:12.5px;font-weight:600;
+  color:var(--navy);cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px;
+}
+.qr-dl:hover{border-color:var(--teal);color:var(--teal)}
+
+/* REF STATS */
+.ref-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.rs-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.rs-val{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-0.5px}
+.rs-val.teal{color:var(--teal)}
+.rs-label{font-size:10.5px;color:var(--gray-400);font-weight:500;margin-top:3px}
+
+/* ── PROFILE SCREEN ── */
+.profile-hero{
+  background:var(--white);border:1px solid var(--border);border-radius:14px;
+  padding:20px;text-align:center;margin-bottom:16px;
+}
+.ph-avatar{
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),var(--teal-mid));
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:800;color:var(--white);
+  margin:0 auto 12px;
+}
+.ph-name{font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-0.3px}
+.ph-code{font-size:12px;color:var(--teal);font-weight:600;margin-top:4px}
+.profile-section{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:12px}
+.ps-head{padding:14px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between}
+.ps-title{font-size:12.5px;font-weight:700;color:var(--navy)}
+.ps-edit{font-size:12px;color:var(--teal);cursor:pointer;font-weight:600}
+.ps-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--gray-100)}
+.ps-row:last-child{border-bottom:none}
+.ps-icon{width:32px;height:32px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ps-label{font-size:11px;color:var(--gray-400);font-weight:500}
+.ps-value{font-size:13.5px;color:var(--navy);font-weight:500;margin-top:1px}
+.ps-value.code{color:var(--teal);font-weight:700;letter-spacing:2px}
+.signout-btn{
+  width:100%;background:var(--red-light);color:var(--red);
+  border:1.5px solid rgba(220,38,38,0.15);border-radius:12px;
+  padding:14px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-bottom:24px;
+}
+.signout-btn:hover{background:#fee2e2}
+
+/* ── MODAL (withdraw) ── */
+.modal-ov{position:fixed;inset:0;background:rgba(8,24,42,0.5);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-end;justify-content:center;padding:0}
+.modal-ov.open{display:flex}
+.modal-sheet{
+  background:var(--white);border-radius:20px 20px 0 0;
+  width:100%;max-width:480px;
+  padding:0 0 24px;
+  animation:sheetUp 0.25s ease;
+  box-shadow:0 -8px 40px rgba(13,33,55,0.12);
+}
+@keyframes sheetUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.ms-handle{width:36px;height:4px;background:var(--gray-200);border-radius:2px;margin:12px auto 18px}
+.ms-title{font-size:18px;font-weight:800;color:var(--navy);padding:0 20px;margin-bottom:4px}
+.ms-sub{font-size:13px;color:var(--gray-400);padding:0 20px;margin-bottom:20px}
+.ms-body{padding:0 20px}
+.ms-close{display:flex;justify-content:flex-end;padding:0 20px;margin-bottom:8px}
+.ms-close-btn{background:var(--bg);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--gray-400)}
+.balance-chip{background:var(--teal-xlight);border:1px solid var(--teal-light);border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.bc-label{font-size:12px;color:var(--teal-mid);font-weight:500}
+.bc-val{font-size:14px;font-weight:800;color:var(--teal)}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--navy);color:var(--white);
+  padding:10px 20px;border-radius:50px;
+  font-size:13px;font-weight:600;
+  opacity:0;transition:all 0.3s;pointer-events:none;z-index:300;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(min-width:480px){
+  .app-body{max-width:480px;margin:0 auto}
+  .bottom-nav{max-width:480px;margin:0 auto;border-radius:0}
+  .app{background:#E8F4F8}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     AUTH: SIGNUP STEP 1 — PERSONAL DETAILS
+═══════════════════════════════════════════ -->
+<div id="auth-signup-1" class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-top">
+      <div class="auth-logo">
+        <svg height="22" viewBox="0 0 692 456" xmlns="http://www.w3.org/2000/svg" style="width:auto">
+          <path fill="#007b84" d="m501,281c-10-6-19-15-25-26s-9-23-9-35 3-25,9-36 15-19,26-26 23-9,35-9 25,3,35,9 19,15,26,26 10,23,10,36c0,14-4,27-12,39-5,8-12,15-20,20-12,7-24,11-38,11-13,0-24-3-35-9zm56-24c6-4,11-9,15-15s6-14,6-22-2-15-6-22-9-12-15-15-13-6-21-6-14,2-21,6-11,9-15,15-6,14-6,22 2,15,6,22 9,12,15,15 13,6,21,6 14-2,21-6z"/>
+          <path fill="#007b84" d="m180,159c11,6,19,15,25,26s9,23,9,36-3,25-9,36-14,20-25,26-22,10-35,10c-8,0-16-2-23-5s-12-8-17-13v51c0,3-2,5-5,5h-20c-3,0-5-2-5-5v-170c0-3,2-5,5-5h16c3,0,4,1,5,4l2,13c5-6,11-11,18-14s15-5,24-5c13,0,24,3,35,10zm-15,100c6-4,11-9,14-15s5-14,5-22-2-16-5-22-8-12-14-16-13-6-21-6-15,2-21,6-11,9-15,16-5,14-5,22 2,16,5,22 8,12,15,15 13,6,21,6 14-2,21-6z"/>
+          <path fill="#1d3849" d="m394,189c-6-6-16-7-24-2l-4,3c-5,2-9,2-12-1v-33c0-3-2-5-5-5h-16c-2,0-4,1-4,3l-2,2-2,13c-1-1-1-2-2-2-5-5-10-9-16-12-3-2-7-3-11-4l-3-1c-3 0-6-1-10-1-7,0-14,1-21,3l-3,1-1,1c-2,1-4,2-5,2l-3,2c-1,1-4,2-6,3s-5,3-6,3c-11,6-19,15-25,26-6,11-9,23-9,36 0,12,3,24,8,34l1,2 1,1c0,1,1,2,1,2 5,8,12,15,19,21l4,3c10,6,22,10,35,10 9,0,17-2,24-5 4-2,8-5,12-8 2-2,4-4,6-6l1,11 1,2c0,0,0,1,0,1 1,2,2,3,5,3h16c3,0,5-2,5-5v-69c3-3,7-4,11-2l6,4c6,3,14,3,19,0 9-6,11-20,3-28zm-68,41c0,1-1,2-1,3-0,1-1,3-1,4-1,2-1,3-2,4-3,5-6,9-10,12l-5,4c-5,3-11,5-18,5l-3,0c-8,0-15-2-21-6l-4-3c-4-3-7-7-10-12l-1-1c-3-5-4-11-4-18l0-3c0-1,0-2,0-3 0-2,0-4,1-5l0-1c1-4,2-8,4-12l0-1c0-1,1-2,1-2 0-1,1-2,1-2 3-4,7-8,11-11 4-2,8-4,13-5 3-1,5-1,8-1 6,0,11,1,15,3l6,3 2,1c2,2,5,4,7,6l2,2c2,2,3,4,5,7 2,4,4,9,5,14 0,3,1,5,1,8s0,6-1,8l0,2z"/>
+          <path fill="#007b84" d="m470,259h-68l69-89c1-2,2-4,2-6v-12c0-3-2-5-5-5h-99c-3,0-5,2-5,5v18s0,0,0,0l0,13c1-1,2-1,3-2 11-7,23-6,32,3 10,11,8,30-4,40-7,5-18,5-26,0l-6-4-1,47v7s0,0,0,0v6c0,3,2,5,5,5h103c3,0,5-2,5-5v-18c0-3-2-5-5-5z"/>
+        </svg>
+        <span class="auth-logo-tag">Individual</span>
+      </div>
+      <div class="auth-title">Create your account</div>
+      <div class="auth-sub">Join the partner programme</div>
+    </div>
+    <div class="auth-body">
+      <div class="sdots">
+        <div class="sdot on" id="s1d1"></div>
+        <div class="sdot" id="s1d2"></div>
+        <div class="sdot" id="s1d3"></div>
+      </div>
+      <div class="fr2">
+        <div class="fg"><label class="fl">First name</label><input class="fi" id="reg-fn" placeholder="Amina"/></div>
+        <div class="fg"><label class="fl">Last name</label><input class="fi" id="reg-ln" placeholder="Hassan"/></div>
+      </div>
+      <div class="fg"><label class="fl">Email address</label><input class="fi" id="reg-em" type="email" placeholder="amina@example.com"/></div>
+      <div class="fg"><label class="fl">WhatsApp number</label><input class="fi" id="reg-wa" placeholder="0754 000 000"/></div>
+      <div class="fg"><label class="fl">Phone number (for login & OTP)</label><input class="fi" id="reg-ph" placeholder="0754 000 000"/></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" id="reg-pw" type="password" placeholder="Choose a strong password"/></div>
+      <button class="btn-main" onclick="goStep2()">Continue →</button>
+      <div class="auth-switch">Already have an account? <a onclick="showScreen('auth-login')">Log in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AUTH: SIGNUP STEP 2 — CREATE REFERRAL CODE
+═══════════════════════════════════════════ -->
+<div id="auth-signup-2" class="auth-wrap" style="display:none">
+  <div class="auth-card">
+    <div class="auth-top">
+      <div class="auth-logo">
+        <svg height="22" viewBox="0 0 692 456" xmlns="http://www.w3.org/2000/svg" style="width:auto">
+          <path fill="#007b84" d="m501,281c-10-6-19-15-25-26s-9-23-9-35 3-25,9-36 15-19,26-26 23-9,35-9 25,3,35,9 19,15,26,26 10,23,10,36c0,14-4,27-12,39-5,8-12,15-20,20-12,7-24,11-38,11-13,0-24-3-35-9zm56-24c6-4,11-9,15-15s6-14,6-22-2-15-6-22-9-12-15-15-13-6-21-6-14,2-21,6-11,9-15,15-6,14-6,22 2,15,6,22 9,12,15,15 13,6,21,6 14-2,21-6z"/>
+          <path fill="#007b84" d="m180,159c11,6,19,15,25,26s9,23,9,36-3,25-9,36-14,20-25,26-22,10-35,10c-8,0-16-2-23-5s-12-8-17-13v51c0,3-2,5-5,5h-20c-3,0-5-2-5-5v-170c0-3,2-5,5-5h16c3,0,4,1,5,4l2,13c5-6,11-11,18-14s15-5,24-5c13,0,24,3,35,10zm-15,100c6-4,11-9,14-15s5-14,5-22-2-16-5-22-8-12-14-16-13-6-21-6-15,2-21,6-11,9-15,16-5,14-5,22 2,16,5,22 8,12,15,15 13,6,21,6 14-2,21-6z"/>
+          <path fill="#1d3849" d="m394,189c-6-6-16-7-24-2l-4,3c-5,2-9,2-12-1v-33c0-3-2-5-5-5h-16c-2,0-4,1-4,3l-2,2-2,13c-1-1-1-2-2-2-5-5-10-9-16-12-3-2-7-3-11-4l-3-1c-3 0-6-1-10-1-7,0-14,1-21,3l-3,1-1,1c-2,1-4,2-5,2l-3,2c-1,1-4,2-6,3s-5,3-6,3c-11,6-19,15-25,26-6,11-9,23-9,36 0,12,3,24,8,34l1,2 1,1c0,1,1,2,1,2 5,8,12,15,19,21l4,3c10,6,22,10,35,10 9,0,17-2,24-5 4-2,8-5,12-8 2-2,4-4,6-6l1,11 1,2c0,0,0,1,0,1 1,2,2,3,5,3h16c3,0,5-2,5-5v-69c3-3,7-4,11-2l6,4c6,3,14,3,19,0 9-6,11-20,3-28zm-68,41c0,1-1,2-1,3-0,1-1,3-1,4-1,2-1,3-2,4-3,5-6,9-10,12l-5,4c-5,3-11,5-18,5l-3,0c-8,0-15-2-21-6l-4-3c-4-3-7-7-10-12l-1-1c-3-5-4-11-4-18l0-3c0-1,0-2,0-3 0-2,0-4,1-5l0-1c1-4,2-8,4-12l0-1c0-1,1-2,1-2 0-1,1-2,1-2 3-4,7-8,11-11 4-2,8-4,13-5 3-1,5-1,8-1 6,0,11,1,15,3l6,3 2,1c2,2,5,4,7,6l2,2c2,2,3,4,5,7 2,4,4,9,5,14 0,3,1,5,1,8s0,6-1,8l0,2z"/>
+          <path fill="#007b84" d="m470,259h-68l69-89c1-2,2-4,2-6v-12c0-3-2-5-5-5h-99c-3,0-5,2-5,5v18s0,0,0,0l0,13c1-1,2-1,3-2 11-7,23-6,32,3 10,11,8,30-4,40-7,5-18,5-26,0l-6-4-1,47v7s0,0,0,0v6c0,3,2,5,5,5h103c3,0,5-2,5-5v-18c0-3-2-5-5-5z"/>
+        </svg>
+        <span class="auth-logo-tag">Step 2 of 3</span>
+      </div>
+      <div class="auth-title">Choose your referral code</div>
+      <div class="auth-sub">This is permanent — choose carefully</div>
+    </div>
+    <div class="auth-body">
+      <div class="sdots">
+        <div class="sdot" id="s2d1"></div>
+        <div class="sdot on" id="s2d2"></div>
+        <div class="sdot" id="s2d3"></div>
+      </div>
+      <div class="info-note">
+        Your referral code is <strong>permanent and cannot be changed</strong>. Once set, your unique referral link and QR code are generated automatically from this code.
+      </div>
+      <div class="fg">
+        <label class="fl">Your referral code</label>
+        <div class="code-input-wrap">
+          <span class="code-prefix">#</span>
+          <input class="fi fi-code" id="reg-code" placeholder="e.g. AMINA07" maxlength="10" oninput="checkCode(this)"/>
+          <span class="code-check" id="code-check"></span>
+        </div>
+        <div style="font-size:11.5px;color:var(--gray-400);margin-top:5px">Letters and numbers only. 4–10 characters. No spaces.</div>
+      </div>
+      <div id="code-preview" style="display:none;margin-bottom:14px">
+        <div style="font-size:11.5px;font-weight:600;color:var(--gray-600);margin-bottom:6px">Your referral link will be:</div>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--teal-mid);word-break:break-all" id="code-preview-url"></div>
+      </div>
+      <button class="btn-main" onclick="goStep3()">Confirm code →</button>
+      <div style="text-align:center;margin-top:12px"><a onclick="showScreen('auth-signup-1')" style="font-size:12px;color:var(--gray-400);cursor:pointer">← Back</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AUTH: SIGNUP STEP 3 — OTP
+═══════════════════════════════════════════ -->
+<div id="auth-signup-3" class="auth-wrap" style="display:none">
+  <div class="auth-card">
+    <div class="auth-top">
+      <div class="auth-logo">
+        <svg height="22" viewBox="0 0 692 456" xmlns="http://www.w3.org/2000/svg" style="width:auto"><path fill="#007b84" d="m501,281c-10-6-19-15-25-26s-9-23-9-35 3-25,9-36 15-19,26-26 23-9,35-9 25,3,35,9 19,15,26,26 10,23,10,36c0,14-4,27-12,39-5,8-12,15-20,20-12,7-24,11-38,11-13,0-24-3-35-9zm56-24c6-4,11-9,15-15s6-14,6-22-2-15-6-22-9-12-15-15-13-6-21-6-14,2-21,6-11,9-15,15-6,14-6,22 2,15,6,22 9,12,15,15 13,6,21,6 14-2,21-6z"/><path fill="#007b84" d="m180,159c11,6,19,15,25,26s9,23,9,36-3,25-9,36-14,20-25,26-22,10-35,10c-8,0-16-2-23-5s-12-8-17-13v51c0,3-2,5-5,5h-20c-3,0-5-2-5-5v-170c0-3,2-5,5-5h16c3,0,4,1,5,4l2,13c5-6,11-11,18-14s15-5,24-5c13,0,24,3,35,10zm-15,100c6-4,11-9,14-15s5-14,5-22-2-16-5-22-8-12-14-16-13-6-21-6-15,2-21,6-11,9-15,16-5,14-5,22 2,16,5,22 8,12,15,15 13,6,21,6 14-2,21-6z"/><path fill="#1d3849" d="m394,189c-6-6-16-7-24-2l-4,3c-5,2-9,2-12-1v-33c0-3-2-5-5-5h-16c-2,0-4,1-4,3l-2,2-2,13c-1-1-1-2-2-2-5-5-10-9-16-12-3-2-7-3-11-4l-3-1c-3 0-6-1-10-1-7,0-14,1-21,3l-3,1-1,1c-2,1-4,2-5,2l-3,2c-1,1-4,2-6,3s-5,3-6,3c-11,6-19,15-25,26-6,11-9,23-9,36 0,12,3,24,8,34l1,2 1,1c0,1,1,2,1,2 5,8,12,15,19,21l4,3c10,6,22,10,35,10 9,0,17-2,24-5 4-2,8-5,12-8 2-2,4-4,6-6l1,11 1,2c0,0,0,1,0,1 1,2,2,3,5,3h16c3,0,5-2,5-5v-69c3-3,7-4,11-2l6,4c6,3,14,3,19,0 9-6,11-20,3-28z"/><path fill="#007b84" d="m470,259h-68l69-89c1-2,2-4,2-6v-12c0-3-2-5-5-5h-99c-3,0-5,2-5,5v18l0,13c1-1,2-1,3-2 11-7,23-6,32,3 10,11,8,30-4,40-7,5-18,5-26,0l-6-4-1,47v7v6c0,3,2,5,5,5h103c3,0,5-2,5-5v-18c0-3-2-5-5-5z"/></svg>
+        <span class="auth-logo-tag">Step 3 of 3</span>
+      </div>
+      <div class="auth-title">Verify your number</div>
+      <div class="auth-sub">We sent a 6-digit code to <strong id="otp-phone-show">your phone</strong></div>
+    </div>
+    <div class="auth-body">
+      <div class="sdots">
+        <div class="sdot" id="s3d1"></div>
+        <div class="sdot" id="s3d2"></div>
+        <div class="sdot on" id="s3d3"></div>
+      </div>
+      <div class="otp-row">
+        <input class="ob" maxlength="1" id="o1" oninput="otpF(this,'o2')"/>
+        <input class="ob" maxlength="1" id="o2" oninput="otpF(this,'o3')"/>
+        <input class="ob" maxlength="1" id="o3" oninput="otpF(this,'o4')"/>
+        <input class="ob" maxlength="1" id="o4" oninput="otpF(this,'o5')"/>
+        <input class="ob" maxlength="1" id="o5" oninput="otpF(this,'o6')"/>
+        <input class="ob" maxlength="1" id="o6" oninput="finishOtp()"/>
+      </div>
+      <div class="resend" style="margin-bottom:20px">Didn't receive it? <a>Resend code</a></div>
+      <button class="btn-main" onclick="finishOtp()">Verify & enter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     AUTH: LOGIN
+═══════════════════════════════════════════ -->
+<div id="auth-login" class="auth-wrap" style="display:none">
+  <div class="auth-card">
+    <div class="auth-top">
+      <div class="auth-logo">
+        <svg height="22" viewBox="0 0 692 456" xmlns="http://www.w3.org/2000/svg" style="width:auto"><path fill="#007b84" d="m501,281c-10-6-19-15-25-26s-9-23-9-35 3-25,9-36 15-19,26-26 23-9,35-9 25,3,35,9 19,15,26,26 10,23,10,36c0,14-4,27-12,39-5,8-12,15-20,20-12,7-24,11-38,11-13,0-24-3-35-9zm56-24c6-4,11-9,15-15s6-14,6-22-2-15-6-22-9-12-15-15-13-6-21-6-14,2-21,6-11,9-15,15-6,14-6,22 2,15,6,22 9,12,15,15 13,6,21,6 14-2,21-6z"/><path fill="#007b84" d="m180,159c11,6,19,15,25,26s9,23,9,36-3,25-9,36-14,20-25,26-22,10-35,10c-8,0-16-2-23-5s-12-8-17-13v51c0,3-2,5-5,5h-20c-3,0-5-2-5-5v-170c0-3,2-5,5-5h16c3,0,4,1,5,4l2,13c5-6,11-11,18-14s15-5,24-5c13,0,24,3,35,10zm-15,100c6-4,11-9,14-15s5-14,5-22-2-16-5-22-8-12-14-16-13-6-21-6-15,2-21,6-11,9-15,16-5,14-5,22 2,16,5,22 8,12,15,15 13,6,21,6 14-2,21-6z"/><path fill="#1d3849" d="m394,189c-6-6-16-7-24-2l-4,3c-5,2-9,2-12-1v-33c0-3-2-5-5-5h-16c-2,0-4,1-4,3l-2,2-2,13-2-2c-5-5-10-9-16-12-3-2-7-3-11-4l-3-1-10-1c-7,0-14,1-21,3l-3,1-1,1-5,2-3,2-6,3-6,3c-11,6-19,15-25,26-6,11-9,23-9,36 0,12,3,24,8,34l1,2 1,1 1,2c5,8,12,15,19,21l4,3c10,6,22,10,35,10 9,0,17-2,24-5 4-2,8-5,12-8 2-2,4-4,6-6l1,11 1,2 0,1c1,2,2,3,5,3h16c3,0,5-2,5-5v-69c3-3,7-4,11-2l6,4c6,3,14,3,19,0 9-6,11-20,3-28z"/><path fill="#007b84" d="m470,259h-68l69-89c1-2,2-4,2-6v-12c0-3-2-5-5-5h-99c-3,0-5,2-5,5v18l0,13 3-2c11-7,23-6,32,3 10,11,8,30-4,40-7,5-18,5-26,0l-6-4-1,47v7 6c0,3,2,5,5,5h103c3,0,5-2,5-5v-18c0-3-2-5-5-5z"/></svg>
+        <span class="auth-logo-tag">Individual</span>
+      </div>
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Log in with your phone number</div>
+    </div>
+    <div class="auth-body">
+      <div class="fg"><label class="fl">Phone number</label><input class="fi" placeholder="0754 000 000"/></div>
+      <div class="fg"><label class="fl">Password</label><input class="fi" type="password" placeholder="••••••••"/></div>
+      <div style="text-align:right;margin-bottom:14px"><a style="font-size:12px;color:var(--teal);cursor:pointer;font-weight:600">Forgot password?</a></div>
+      <button class="btn-main" onclick="enterApp()">Log in →</button>
+      <div class="auth-switch">New here? <a onclick="showScreen('auth-signup-1')">Create an account</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     THE APP
+═══════════════════════════════════════════ -->
+<div id="app" class="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <svg height="20" viewBox="0 0 692 456" xmlns="http://www.w3.org/2000/svg" style="width:auto"><path fill="#007b84" d="m501,281c-10-6-19-15-25-26s-9-23-9-35 3-25,9-36 15-19,26-26 23-9,35-9 25,3,35,9 19,15,26,26 10,23,10,36c0,14-4,27-12,39-5,8-12,15-20,20-12,7-24,11-38,11-13,0-24-3-35-9zm56-24c6-4,11-9,15-15s6-14,6-22-2-15-6-22-9-12-15-15-13-6-21-6-14,2-21,6-11,9-15,15-6,14-6,22 2,15,6,22 9,12,15,15 13,6,21,6 14-2,21-6z"/><path fill="#007b84" d="m180,159c11,6,19,15,25,26s9,23,9,36-3,25-9,36-14,20-25,26-22,10-35,10c-8,0-16-2-23-5s-12-8-17-13v51c0,3-2,5-5,5h-20c-3,0-5-2-5-5v-170c0-3,2-5,5-5h16c3,0,4,1,5,4l2,13c5-6,11-11,18-14s15-5,24-5c13,0,24,3,35,10zm-15,100c6-4,11-9,14-15s5-14,5-22-2-16-5-22-8-12-14-16-13-6-21-6-15,2-21,6-11,9-15,16-5,14-5,22 2,16,5,22 8,12,15,15 13,6,21,6 14-2,21-6z"/><path fill="#1d3849" d="m394,189c-6-6-16-7-24-2l-4,3c-5,2-9,2-12-1v-33c0-3-2-5-5-5h-16c-2,0-4,1-4,3l-2,2-2,13-2-2c-5-5-10-9-16-12-3-2-7-3-11-4l-3-1-10-1c-7,0-14,1-21,3l-3,1-1,1-5,2-3,2-6,3-6,3c-11,6-19,15-25,26-6,11-9,23-9,36 0,12,3,24,8,34l1,2 1,1 1,2c5,8,12,15,19,21l4,3c10,6,22,10,35,10 9,0,17-2,24-5 4-2,8-5,12-8 2-2,4-4,6-6l1,11 1,2 0,1c1,2,2,3,5,3h16c3,0,5-2,5-5v-69c3-3,7-4,11-2l6,4c6,3,14,3,19,0 9-6,11-20,3-28z"/><path fill="#007b84" d="m470,259h-68l69-89c1-2,2-4,2-6v-12c0-3-2-5-5-5h-99c-3,0-5,2-5,5v18l0,13 3-2c11-7,23-6,32,3 10,11,8,30-4,40-7,5-18,5-26,0l-6-4-1,47v7 6c0,3,2,5,5,5h103c3,0,5-2,5-5v-18c0-3-2-5-5-5z"/></svg>
+    </div>
+    <div class="topbar-greeting">Good morning, <strong id="topbar-name">Amina</strong> 👋</div>
+    <div class="notif-btn"><span style="font-size:16px">🔔</span><div class="notif-badge"></div></div>
+  </div>
+
+  <!-- SCROLLABLE BODY -->
+  <div class="app-body">
+
+    <!-- HOME SCREEN -->
+    <div class="screen active" id="screen-home">
+      <!-- Wallet hero -->
+      <div class="wallet-hero">
+        <div class="wh-label">ACCOUNT BALANCE</div>
+        <div class="wh-amount">TZS 84,200</div>
+        <div class="wh-sub">Available to withdraw</div>
+        <div class="wh-actions">
+          <div class="wh-btn" onclick="switchTab('wallet')">
+            <div class="wh-btn-icon">💸</div>
+            <div class="wh-btn-label">Withdraw</div>
+          </div>
+          <div class="wh-btn" onclick="switchTab('wallet')">
+            <div class="wh-btn-icon">📊</div>
+            <div class="wh-btn-label">History</div>
+          </div>
+          <div class="wh-btn" onclick="switchTab('wallet')">
+            <div class="wh-btn-icon">👛</div>
+            <div class="wh-btn-label">Wallet</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick stats -->
+      <div class="quick-stats">
+        <div class="qs-card">
+          <div class="qs-val teal">34</div>
+          <div class="qs-label">Total referrals</div>
+        </div>
+        <div class="qs-card">
+          <div class="qs-val">247</div>
+          <div class="qs-label">Link clicks</div>
+        </div>
+      </div>
+
+      <!-- Referral code -->
+      <div class="code-card">
+        <div class="cc-head">
+          <div class="cc-title">My referral code</div>
+          <div class="cc-see" onclick="switchTab('referral')">See more →</div>
+        </div>
+        <div class="code-display">
+          <div class="code-val" id="home-code">AMINA07</div>
+        </div>
+        <div class="code-link-wrap">
+          <span class="code-link-text" id="home-link">thetravela.com/signup?ref=AMINA07</span>
+          <span class="code-link-copy" onclick="copyLink()">Copy</span>
+        </div>
+        <div class="code-actions-row">
+          <div class="ca-btn" onclick="copyLink()">📋 Copy link</div>
+          <div class="ca-btn" onclick="switchTab('referral')">📱 View QR</div>
+          <div class="ca-btn">↗ Share</div>
+        </div>
+      </div>
+
+      <!-- Recent activity -->
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px">
+        <div class="section-head">
+          <div class="sh-title">Recent activity</div>
+          <div class="sh-link" onclick="switchTab('wallet')">See all</div>
+        </div>
+        <div class="activity-item">
+          <div class="ai-icon earn">💸</div>
+          <div class="ai-body">
+            <div class="ai-title">Commission earned</div>
+            <div class="ai-sub">Tanzania 7-Day 5GB · 14 Aug, 10:42am</div>
+          </div>
+          <div class="ai-amount pos">+TZS 2,467</div>
+        </div>
+        <div class="activity-item">
+          <div class="ai-icon ref">🔗</div>
+          <div class="ai-body">
+            <div class="ai-title">New referral</div>
+            <div class="ai-sub">Someone signed up with your code · 14 Aug</div>
+          </div>
+          <div class="ai-amount" style="color:var(--teal);font-size:12px;font-weight:600">+1 user</div>
+        </div>
+        <div class="activity-item">
+          <div class="ai-icon earn">💸</div>
+          <div class="ai-body">
+            <div class="ai-title">Commission earned</div>
+            <div class="ai-sub">Tanzania 14-Day 15GB · 13 Aug, 3:15pm</div>
+          </div>
+          <div class="ai-amount pos">+TZS 4,934</div>
+        </div>
+        <div class="activity-item">
+          <div class="ai-icon earn">💸</div>
+          <div class="ai-body">
+            <div class="ai-title">Commission earned</div>
+            <div class="ai-sub">Top-up · 12 Aug, 9:00am</div>
+          </div>
+          <div class="ai-amount pos">+TZS 2,467</div>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+    </div>
+
+    <!-- WALLET SCREEN -->
+    <div class="screen" id="screen-wallet">
+      <div class="wallet-full-hero">
+        <div class="wfh-label">ACCOUNT BALANCE</div>
+        <div class="wfh-amount">TZS 84,200</div>
+        <div class="wfh-currency">Tanzanian Shilling</div>
+        <button class="wfh-btn" onclick="openWithdraw()">Withdraw to mobile money</button>
+      </div>
+
+      <div class="wallet-tabs">
+        <div class="wtab active" id="wtab-earn" onclick="walletTab('earn')">Earnings</div>
+        <div class="wtab" id="wtab-wd" onclick="walletTab('wd')">Withdrawals</div>
+        <div class="wtab" id="wtab-bal" onclick="walletTab('bal')">Balance</div>
+      </div>
+
+      <!-- Earnings tab -->
+      <div id="wt-earn" style="background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px">
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body">
+            <div class="tx-title">Commission — 7-Day 5GB</div>
+            <div class="tx-date">14 Aug 2026 · 10:42am</div>
+            <span class="tx-badge done">Paid</span>
+          </div>
+          <div style="text-align:right"><div class="tx-amount pos">+TZS 2,467</div></div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body">
+            <div class="tx-title">Commission — 14-Day 15GB</div>
+            <div class="tx-date">13 Aug 2026 · 3:15pm</div>
+            <span class="tx-badge done">Paid</span>
+          </div>
+          <div style="text-align:right"><div class="tx-amount pos">+TZS 4,934</div></div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body">
+            <div class="tx-title">Commission — Top-up</div>
+            <div class="tx-date">12 Aug 2026 · 9:00am</div>
+            <span class="tx-badge done">Paid</span>
+          </div>
+          <div style="text-align:right"><div class="tx-amount pos">+TZS 2,467</div></div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body">
+            <div class="tx-title">Commission — 30-Day 30GB</div>
+            <div class="tx-date">10 Aug 2026 · 2:30pm</div>
+            <span class="tx-badge done">Paid</span>
+          </div>
+          <div style="text-align:right"><div class="tx-amount pos">+TZS 8,224</div></div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body">
+            <div class="tx-title">Commission — 7-Day 5GB</div>
+            <div class="tx-date">9 Aug 2026 · 11:05am</div>
+            <span class="tx-badge pend">Pending</span>
+          </div>
+          <div style="text-align:right"><div class="tx-amount pos">+TZS 2,467</div></div>
+        </div>
+      </div>
+
+      <!-- Withdrawals tab -->
+      <div id="wt-wd" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px">
+        <div class="tx-item">
+          <div class="tx-icon wd">📤</div>
+          <div class="tx-body">
+            <div class="tx-title">Withdrawal to M-Pesa</div>
+            <div class="tx-date">5 Aug 2026 · 9:00am · 0754***892</div>
+            <span class="tx-badge done">Completed</span>
+          </div>
+          <div style="text-align:right"><div class="tx-amount neg">-TZS 40,000</div></div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon wd">📤</div>
+          <div class="tx-body">
+            <div class="tx-title">Withdrawal to M-Pesa</div>
+            <div class="tx-date">1 Jul 2026 · 10:15am · 0754***892</div>
+            <span class="tx-badge done">Completed</span>
+          </div>
+          <div style="text-align:right"><div class="tx-amount neg">-TZS 30,000</div></div>
+        </div>
+      </div>
+
+      <!-- Balance tab -->
+      <div id="wt-bal" style="display:none;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:16px">
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body"><div class="tx-title">Opening balance</div><div class="tx-date">1 Aug 2026</div></div>
+          <div class="tx-amount pos">TZS 44,108</div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body"><div class="tx-title">+Commission</div><div class="tx-date">9 Aug 2026</div></div>
+          <div class="tx-amount pos">TZS 46,575</div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body"><div class="tx-title">+Commission</div><div class="tx-date">10 Aug 2026</div></div>
+          <div class="tx-amount pos">TZS 54,799</div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body"><div class="tx-title">+Commission</div><div class="tx-date">12 Aug 2026</div></div>
+          <div class="tx-amount pos">TZS 57,266</div>
+        </div>
+        <div class="tx-item">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body"><div class="tx-title">+Commission</div><div class="tx-date">13 Aug 2026</div></div>
+          <div class="tx-amount pos">TZS 62,200</div>
+        </div>
+        <div class="tx-item" style="border-bottom:2px solid var(--teal-light)">
+          <div class="tx-icon earn">💸</div>
+          <div class="tx-body"><div class="tx-title">+Commission</div><div class="tx-date">14 Aug 2026</div></div>
+          <div class="tx-amount pos">TZS 64,667</div>
+        </div>
+        <div class="tx-item" style="border-bottom:none">
+          <div class="tx-icon" style="background:var(--teal-xlight)">⬆️</div>
+          <div class="tx-body"><div class="tx-title" style="color:var(--teal)">Current balance</div><div class="tx-date">As of today</div></div>
+          <div class="tx-amount" style="color:var(--teal);font-size:16px">TZS 84,200</div>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+    </div>
+
+    <!-- REFERRAL CODE SCREEN -->
+    <div class="screen" id="screen-referral">
+      <div class="ref-hero">
+        <div class="rh-label">My referral code</div>
+        <div class="rh-code" id="ref-code-big">AMINA07</div>
+        <div class="rh-sub">Permanent · Cannot be changed</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="ref-stats">
+        <div class="rs-card">
+          <div class="rs-val teal">34</div>
+          <div class="rs-label">Signups</div>
+        </div>
+        <div class="rs-card">
+          <div class="rs-val">247</div>
+          <div class="rs-label">Link clicks</div>
+        </div>
+        <div class="rs-card">
+          <div class="rs-val">14%</div>
+          <div class="rs-label">Conversion</div>
+        </div>
+      </div>
+
+      <!-- Referral link -->
+      <div class="link-box">
+        <div class="lb-head">Referral link</div>
+        <div class="lb-url" id="ref-link-url">thetravela.com/signup?ref=AMINA07</div>
+        <button class="lb-copy" onclick="copyLink()">📋 Copy link</button>
+      </div>
+
+      <!-- QR -->
+      <div class="qr-card">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px">QR code</div>
+        <div class="qr-wrap">
+          <svg viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <rect x="2" y="2" width="20" height="20" rx="2" fill="#0D2137"/>
+            <rect x="5" y="5" width="14" height="14" rx="1" fill="white"/>
+            <rect x="7" y="7" width="10" height="10" rx="1" fill="#0D2137"/>
+            <rect x="48" y="2" width="20" height="20" rx="2" fill="#0D2137"/>
+            <rect x="51" y="5" width="14" height="14" rx="1" fill="white"/>
+            <rect x="53" y="7" width="10" height="10" rx="1" fill="#0D2137"/>
+            <rect x="2" y="48" width="20" height="20" rx="2" fill="#0D2137"/>
+            <rect x="5" y="51" width="14" height="14" rx="1" fill="white"/>
+            <rect x="7" y="53" width="10" height="10" rx="1" fill="#0D2137"/>
+            <rect x="26" y="2" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="32" y="2" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="38" y="6" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="26" y="8" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="32" y="10" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="26" y="26" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="32" y="26" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="38" y="26" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="44" y="28" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="50" y="26" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="56" y="30" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="62" y="26" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="26" y="32" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="38" y="32" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="50" y="34" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="62" y="32" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="26" y="38" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="32" y="40" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="44" y="38" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="56" y="38" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="26" y="44" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="38" y="44" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="26" y="50" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="32" y="52" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="44" y="50" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="56" y="50" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="26" y="56" width="4" height="4" rx="1" fill="#0D2137"/>
+            <rect x="38" y="58" width="4" height="4" rx="1" fill="#007b84"/>
+            <rect x="62" y="56" width="4" height="4" rx="1" fill="#007b84"/>
+          </svg>
+        </div>
+        <div style="font-size:12px;color:var(--gray-400);margin-bottom:14px">Scan to open your referral link</div>
+        <div class="qr-dl" onclick="toast('QR code downloaded')">⬇ Download QR code (PNG)</div>
+      </div>
+
+      <!-- Share buttons -->
+      <div class="share-grid">
+        <div class="share-btn" onclick="toast('Link copied!')">
+          <div class="sb-icon">📋</div>
+          <div class="sb-title">Copy code</div>
+          <div class="sb-sub">Copy referral code</div>
+        </div>
+        <div class="share-btn">
+          <div class="sb-icon">💬</div>
+          <div class="sb-title">WhatsApp</div>
+          <div class="sb-sub">Share via WhatsApp</div>
+        </div>
+        <div class="share-btn">
+          <div class="sb-icon">📱</div>
+          <div class="sb-title">Instagram</div>
+          <div class="sb-sub">Share to story</div>
+        </div>
+        <div class="share-btn">
+          <div class="sb-icon">↗</div>
+          <div class="sb-title">More options</div>
+          <div class="sb-sub">All share options</div>
+        </div>
+      </div>
+      <div style="height:16px"></div>
+    </div>
+
+    <!-- PROFILE SCREEN -->
+    <div class="screen" id="screen-profile">
+      <div class="profile-hero">
+        <div class="ph-avatar" id="prof-avatar">A</div>
+        <div class="ph-name" id="prof-name">Amina Hassan</div>
+        <div class="ph-code">Referral code: <strong id="prof-code">AMINA07</strong></div>
+      </div>
+
+      <!-- Personal info -->
+      <div class="profile-section">
+        <div class="ps-head">
+          <div class="ps-title">Personal information</div>
+          <div class="ps-edit">Edit</div>
+        </div>
+        <div class="ps-row">
+          <div class="ps-icon">👤</div>
+          <div><div class="ps-label">Full name</div><div class="ps-value" id="prof-fullname">Amina Hassan</div></div>
+        </div>
+        <div class="ps-row">
+          <div class="ps-icon">📱</div>
+          <div><div class="ps-label">Phone number (login)</div><div class="ps-value" id="prof-phone">0754 892 001</div></div>
+        </div>
+        <div class="ps-row">
+          <div class="ps-icon">💬</div>
+          <div><div class="ps-label">WhatsApp number</div><div class="ps-value" id="prof-wa">0754 892 001</div></div>
+        </div>
+        <div class="ps-row">
+          <div class="ps-icon">✉️</div>
+          <div><div class="ps-label">Email address</div><div class="ps-value" id="prof-email">amina@example.com</div></div>
+        </div>
+      </div>
+
+      <!-- Withdrawal account -->
+      <div class="profile-section">
+        <div class="ps-head">
+          <div class="ps-title">Withdrawal account</div>
+          <div class="ps-edit">Edit</div>
+        </div>
+        <div class="ps-row">
+          <div class="ps-icon">💳</div>
+          <div><div class="ps-label">Mobile money number</div><div class="ps-value">M-Pesa · 0754***892</div></div>
+        </div>
+        <div class="ps-row">
+          <div class="ps-icon">✅</div>
+          <div><div class="ps-label">Verification status</div><div class="ps-value" style="color:var(--green)">Verified</div></div>
+        </div>
+      </div>
+
+      <!-- Referral code -->
+      <div class="profile-section">
+        <div class="ps-head"><div class="ps-title">Referral code</div></div>
+        <div class="ps-row">
+          <div class="ps-icon">🔗</div>
+          <div>
+            <div class="ps-label">Your permanent referral code</div>
+            <div class="ps-value code" id="prof-ref-code">AMINA07</div>
+          </div>
+        </div>
+        <div class="ps-row" style="border-top:1px solid var(--gray-100)">
+          <div class="ps-icon">⚠️</div>
+          <div><div class="ps-label" style="color:var(--gray-400)">This code is permanent and cannot be changed</div></div>
+        </div>
+      </div>
+
+      <!-- Sign out -->
+      <button class="signout-btn" onclick="signOut()">
+        <span>🚪</span> Sign out
+      </button>
+    </div>
+
+  </div><!-- end app-body -->
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-tab active" id="tab-home" onclick="switchTab('home')">
+      <div class="nav-tab-icon">🏠</div>
+      <div class="nav-tab-label">Home</div>
+    </div>
+    <div class="nav-tab" id="tab-wallet" onclick="switchTab('wallet')">
+      <div class="nav-tab-icon">👛</div>
+      <div class="nav-tab-label">Wallet</div>
+    </div>
+    <div class="nav-tab" id="tab-referral" onclick="switchTab('referral')">
+      <div class="nav-tab-icon">🔗</div>
+      <div class="nav-tab-label">My Code</div>
+    </div>
+    <div class="nav-tab" id="tab-profile" onclick="switchTab('profile')">
+      <div class="nav-tab-icon">👤</div>
+      <div class="nav-tab-label">Profile</div>
+    </div>
+  </div>
+
+</div><!-- end app -->
+
+<!-- WITHDRAW MODAL -->
+<div class="modal-ov" id="modal-wd">
+  <div class="modal-sheet" style="max-width:480px;margin:0 auto">
+    <div class="ms-handle"></div>
+    <div class="ms-close"><div class="ms-close-btn" onclick="closeWithdraw()">×</div></div>
+    <div class="ms-title">Withdraw funds</div>
+    <div class="ms-sub">To your linked mobile money account</div>
+    <div class="ms-body">
+      <div class="balance-chip">
+        <div class="bc-label">Available balance</div>
+        <div class="bc-val">TZS 84,200</div>
+      </div>
+      <div class="fg"><label class="fl">Amount to withdraw (TZS)</label><input class="fi" placeholder="e.g. 50000" type="number" id="wd-amount"/></div>
+      <div class="fg">
+        <label class="fl">Withdraw to</label>
+        <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:18px">📱</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--navy)">M-Pesa · 0754***892</div>
+            <div style="font-size:11.5px;color:var(--gray-400)">Verified account</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-teal" onclick="doWithdraw()">Confirm withdrawal →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── UTILS ──
+function showScreen(id){
+  ['auth-signup-1','auth-signup-2','auth-signup-3','auth-login','app'].forEach(s=>{
+    const el=document.getElementById(s);
+    if(el)el.style.display='none';
+  });
+  const target=document.getElementById(id);
+  if(target){
+    target.style.display=(id==='app')?'flex':'flex';
+    if(id==='app')document.getElementById('app').classList.add('visible');
+  }
+}
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+function otpF(el,nxt){if(el.value.length===1){const n=document.getElementById(nxt);if(n)n.focus();}}
+
+// ── SIGNUP FLOW ──
+let userData={};
+function goStep2(){
+  userData.fn=document.getElementById('reg-fn').value||'Amina';
+  userData.ln=document.getElementById('reg-ln').value||'Hassan';
+  userData.ph=document.getElementById('reg-ph').value||'0754 892 001';
+  userData.em=document.getElementById('reg-em').value||'amina@example.com';
+  userData.wa=document.getElementById('reg-wa').value||'0754 892 001';
+  // pre-suggest a code
+  const sug=(userData.fn.toUpperCase().replace(/[^A-Z]/g,'').slice(0,5)||'USER');
+  document.getElementById('reg-code').value=sug;
+  updateCodePreview(sug);
+  showScreen('auth-signup-2');
+}
+function checkCode(el){
+  el.value=el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  updateCodePreview(el.value);
+  const chk=document.getElementById('code-check');
+  if(el.value.length>=4){chk.textContent='✅';}
+  else if(el.value.length>0){chk.textContent='❌';}
+  else{chk.textContent='';}
+}
+function updateCodePreview(code){
+  const prev=document.getElementById('code-preview');
+  const url=document.getElementById('code-preview-url');
+  if(code.length>=4){
+    prev.style.display='block';
+    url.textContent='thetravela.com/signup?ref='+code;
+    userData.code=code;
+  } else {
+    prev.style.display='none';
+  }
+}
+function goStep3(){
+  const code=document.getElementById('reg-code').value;
+  if(code.length<4){toast('Code must be at least 4 characters');return;}
+  userData.code=code;
+  document.getElementById('otp-phone-show').textContent=userData.ph;
+  showScreen('auth-signup-3');
+  setTimeout(()=>document.getElementById('o1').focus(),200);
+}
+function finishOtp(){
+  // set up app with user data
+  document.getElementById('topbar-name').textContent=userData.fn||'Amina';
+  const initials=((userData.fn||'A')[0]+(userData.ln||'H')[0]).toUpperCase();
+  document.getElementById('prof-avatar').textContent=initials;
+  document.getElementById('prof-name').textContent=(userData.fn||'Amina')+' '+(userData.ln||'Hassan');
+  document.getElementById('prof-fullname').textContent=(userData.fn||'Amina')+' '+(userData.ln||'Hassan');
+  document.getElementById('prof-phone').textContent=userData.ph||'0754 892 001';
+  document.getElementById('prof-wa').textContent=userData.wa||'0754 892 001';
+  document.getElementById('prof-email').textContent=userData.em||'amina@example.com';
+  const c=userData.code||'AMINA07';
+  document.getElementById('home-code').textContent=c;
+  document.getElementById('home-link').textContent='thetravela.com/signup?ref='+c;
+  document.getElementById('ref-code-big').textContent=c;
+  document.getElementById('ref-link-url').textContent='thetravela.com/signup?ref='+c;
+  document.getElementById('prof-code').textContent='Referral code: '+c;
+  document.getElementById('prof-ref-code').textContent=c;
+  enterApp();
+}
+function enterApp(){
+  showScreen('app');
+  document.getElementById('app').style.display='flex';
+}
+
+// ── TAB NAVIGATION ──
+function switchTab(name){
+  ['home','wallet','referral','profile'].forEach(t=>{
+    document.getElementById('screen-'+t).classList.remove('active');
+    document.getElementById('tab-'+t).classList.remove('active');
+  });
+  document.getElementById('screen-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelector('.app-body').scrollTop=0;
+}
+
+// ── WALLET TABS ──
+function walletTab(name){
+  ['earn','wd','bal'].forEach(t=>{
+    document.getElementById('wtab-'+t).classList.remove('active');
+    document.getElementById('wt-'+t).style.display='none';
+  });
+  document.getElementById('wtab-'+name).classList.add('active');
+  document.getElementById('wt-'+name).style.display='block';
+}
+
+// ── WITHDRAW ──
+function openWithdraw(){document.getElementById('modal-wd').classList.add('open');}
+function closeWithdraw(){document.getElementById('modal-wd').classList.remove('open');}
+function doWithdraw(){
+  closeWithdraw();
+  toast('Withdrawal submitted — funds sent to M-Pesa');
+}
+document.getElementById('modal-wd').addEventListener('click',function(e){if(e.target===this)closeWithdraw();});
+
+// ── COPY ──
+function copyLink(){
+  const link='https://thetravela.com/signup?ref='+(userData.code||'AMINA07');
+  navigator.clipboard&&navigator.clipboard.writeText(link);
+  toast('Referral link copied!');
+}
+
+// ── SIGN OUT ──
+function signOut(){showScreen('auth-login');}
+</script>
+</body>
+</html>

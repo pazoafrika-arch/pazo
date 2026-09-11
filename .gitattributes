@@ -1,0 +1,13 @@
+# Normalise text files in the repo, but never convert files that Linux runs.
+* text=auto eol=lf
+
+# Shell scripts and SQL must keep LF endings. CRLF breaks the shebang on Linux
+# with "bad interpreter: /usr/bin/env bash^M".
+*.sh text eol=lf
+*.sql text eol=lf
+
+# Binary files must not be touched at all.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.svg text eol=lf

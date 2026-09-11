@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Secrets — never commit these. .env.example carries the shape instead.
+.env
+.env.local
+.env.*.local
+.env.production
+*.pem
+*.key
+
+# Logs and runtime
+*.log
+npm-debug.log*
+logs/
+pids/
+*.pid
+
+# Local database dumps and backups
+*.sql.gz
+backups/
+
+# Editor and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Scratch
+tmp/
+temp/
+aiPayment_coments.txt
