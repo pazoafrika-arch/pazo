@@ -30,16 +30,19 @@ Still under **Variables**, click **Raw Editor** and paste:
 ```
 NODE_ENV=production
 OTP_DEV_ECHO=false
-JWT_ACCESS_SECRET=<paste a long random string>
-JWT_REFRESH_SECRET=<paste a different long random string>
+JWT_ACCESS_SECRET=<a long random string>
+JWT_REFRESH_SECRET=<a different long random string>
+ADMIN_EMAIL=you@pazo.co.tz
+ADMIN_PASSWORD=SomethingStrong2026
+ADMIN_NAME=Your Name
 CLICKPESA_BASE_URL=https://api.clickpesa.com/third-parties
 CLICKPESA_CLIENT_ID=
 CLICKPESA_API_KEY=
 CLICKPESA_CHECKSUM_KEY=
 ```
 
-For the two secrets, use any long random text — 40+ characters each, and
-different from one another.
+The admin account is created automatically on first boot from those three
+`ADMIN_*` values.
 
 ### 6. Get your URL
 - **Settings** → **Networking** → **Generate Domain**
@@ -56,22 +59,19 @@ Railway redeploys. When it finishes, open the URL.
 
 ---
 
-## Creating your admin account
+## Your admin account
 
-The deployment starts with an empty database. To create your first admin,
-open the **MySQL** service → **Data** tab → **Query**, and run:
+It creates itself. Include these in the variables at step 5:
 
-```sql
-INSERT INTO users (id, email, password_hash, role, status, name, avatar_color, email_verified)
-VALUES (
-  UUID(),
-  'you@pazo.co.tz',
-  '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewYGBLiVjkLZ3Muq',
-  'super_admin', 'active', 'Your Name', '#007b84', 1
-);
+```
+ADMIN_EMAIL=you@pazo.co.tz
+ADMIN_PASSWORD=SomethingStrong2026
+ADMIN_NAME=Your Name
 ```
 
-That password hash is `Admin2026!`. **Sign in and change it immediately.**
+On the first boot the account is created; on every boot after that it is left
+alone. Sign in, change the password, then delete `ADMIN_PASSWORD` from the
+variables so it is not sitting in the dashboard.
 
 ---
 
