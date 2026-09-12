@@ -21,6 +21,7 @@ import {
   SkeletonRows,
   Switch,
 } from '../../components/UI.jsx';
+import { AvatarUpload } from '../../components/AvatarUpload.jsx';
 import { useApi, useDebounced } from '../../hooks/useApi.js';
 import { api, downloadFile, qs } from '../../lib/api.js';
 import { useAuth } from '../../app/AuthContext.jsx';
@@ -268,6 +269,34 @@ function BusinessDrawer({ businessId, onClose, onChanged, onNewKey }) {
           <SkeletonRows count={5} />
         ) : !data ? null : (
           <div className="stack">
+            {/* The logo appears on the business dashboard and in this list,
+                so it is managed from here. */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <AvatarUpload
+                user={{ id: b.id, name: b.name, avatar_color: '#0f3460', has_avatar: b.has_logo }}
+                size={72}
+                square
+                label="Business logo"
+                endpoints={{
+                  get: (u) => `/media/business-logo/${u.id}`,
+                  put: `/media/admin/business-logo/${b.id}`,
+                  del: `/media/admin/business-logo/${b.id}`,
+                }}
+                onChanged={() => {
+                  reload({ quiet: true });
+                  onChanged();
+                }}
+              />
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 'var(--t-lg)', fontWeight: 800, color: 'var(--navy)' }}>
+                  {b.name}
+                </div>
+                <div className="field-hint" style={{ marginTop: 4 }}>
+                  Click the logo to upload or replace it
+                </div>
+              </div>
+            </div>
+
             <div className="grid-2">
               <Card>
                 <div className="stat-label">Wallet balance</div>

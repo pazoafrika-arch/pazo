@@ -1251,8 +1251,14 @@
   }
 }
 
-/* Inputs inherit --t-base, which is 16px. That is deliberate: iOS Safari
-   zooms the viewport on focus for anything smaller. */
+/* iOS zooms on any input under 16px; bump them on small screens. */
+@media (max-width: 768px) {
+  .input,
+  .select,
+  .textarea {
+    font-size: 16px;
+  }
+}
 
 /* ---------------- avatar upload ---------------- */
 .avatar-upload {
@@ -1442,4 +1448,13 @@
     width: 100%;
     justify-content: flex-end;
   }
+}
+
+/* A business or organisation reads better as a rounded square than a circle. */
+.avatar-upload.square,
+.avatar-upload.square .avatar-upload-initials {
+  border-radius: var(--r-lg);
+}
+.avatar-upload.readonly {
+  cursor: default;
 }

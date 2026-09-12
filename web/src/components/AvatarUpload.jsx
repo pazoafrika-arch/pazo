@@ -53,7 +53,25 @@ function cropToSquare(file) {
   });
 }
 
-export function AvatarUpload({ user, size = 96, onChanged, label = 'Profile picture' }) {
+/**
+ * `endpoints` lets an admin edit someone else's picture, or a business logo,
+ * with the same component and the same validation. Left unset, it edits the
+ * signed-in user's own picture.
+ */
+export function AvatarUpload({
+  user,
+  size = 96,
+  onChanged,
+  label = 'Profile picture',
+  endpoints,
+  square = false,
+  readOnly = false,
+}) {
+  const paths = endpoints || {
+    get: (u) => `/media/avatar/${u.id}`,
+    put: '/media/avatar',
+    del: '/media/avatar',
+  };
   const toast = useToast();
   const inputRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -80,7 +98,7 @@ export function AvatarUpload({ user, size = 96, onChanged, label = 'Profile pict
 
     (async () => {
       try {
-        const res = await fetch(`${api.base}/media/avatar/${user.id}?v=${version}`, {
+        const res = await fetch(`${api.base}${paths.get(user)}?v=${version}`, {
           headers: { Authorization: `Bearer ${getAccessToken()}` },
         });
         if (!res.ok) return;
@@ -136,7 +154,7 @@ export function AvatarUpload({ user, size = 96, onChanged, label = 'Profile pict
     setBusy(true);
     setError(null);
     try {
-      await api.put('/media/avatar', { image: preview });
+      await api.put(paths.put, { image: preview });
       setVersion((v) => v + 1);
       setOpen(false);
       setPreview(null);
@@ -152,7 +170,7 @@ export function AvatarUpload({ user, size = 96, onChanged, label = 'Profile pict
   const remove = async () => {
     setBusy(true);
     try {
-      await api.del('/media/avatar');
+      await api.del(paths.del);
       setSrc(null);
       setVersion((v) => v + 1);
       setOpen(false);
@@ -169,9 +187,9 @@ export function AvatarUpload({ user, size = 96, onChanged, label = 'Profile pict
   return (
     <>
       <div
-        className={`avatar-upload ${dragging ? 'dragging' : ''}`}
+        className={`avatar-upload ${dragging ? 'dragging' : ''} ${square ? 'square' : ''} ${readOnly ? 'readonly' : ''}`}
         style={{ width: size, height: size }}
-        onClick={() => inputRef.current?.click()}
+        onClick={readOnly ? undefined : () => inputRef.current?.click()}
         onDragOver={(e) => {
           e.preventDefault();
           setDragging(true);
@@ -180,13 +198,15 @@ export function AvatarUpload({ user, size = 96, onChanged, label = 'Profile pict
         onDrop={(e) => {
           e.preventDefault();
           setDragging(false);
-          handleFile(e.dataTransfer.files?.[0]);
+          if (!readOnly) handleFile(e.dataTransfer.files?.[0]);
         }}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && inputRef.current?.click()}
-        aria-label={`${label}. Click to change.`}
-        title="Click or drop an image to change"
+        role={readOnly ? undefined : 'button'}
+        tabIndex={readOnly ? undefined : 0}
+        onKeyDown={(e) =>
+          !readOnly && (e.key === 'Enter' || e.key === ' ') && inputRef.current?.click()
+        }
+        aria-label={readOnly ? label : `${label}. Click to change.`}
+        title={readOnly ? label : 'Click or drop an image to change'}
       >
         {src ? (
           <img src={src} alt="" className="avatar-upload-img" />
@@ -198,9 +218,11 @@ export function AvatarUpload({ user, size = 96, onChanged, label = 'Profile pict
             {toInitials(user?.name)}
           </div>
         )}
-        <div className="avatar-upload-overlay">
-          <Icon name="edit" size={size > 70 ? 20 : 15} />
-        </div>
+        {!readOnly && (
+          <div className="avatar-upload-overlay">
+            <Icon name="edit" size={size > 70 ? 20 : 15} />
+          </div>
+        )}
       </div>
 
       <input
@@ -228,7 +250,7 @@ export function AvatarUpload({ user, size = 96, onChanged, label = 'Profile pict
           setPreview(null);
           setError(null);
         }}
-        title="Your profile picture"
+        title={label}
         subtitle="This is how it will appear across Pazo"
         footer={
           <>

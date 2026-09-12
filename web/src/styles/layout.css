@@ -334,8 +334,7 @@
   transform: translateY(-1px) scale(1.06);
 }
 .bottom-tab-label {
-  /* iOS and Android tab bars both sit at 11-12px. */
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 600;
   letter-spacing: -0.01em;
   overflow: hidden;

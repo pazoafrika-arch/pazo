@@ -203,6 +203,7 @@ router.get(
     const items = rows.map((b) => ({
       id: b.id,
       name: b.name,
+      has_logo: !!b.has_logo,
       website: b.website,
       category: b.category,
       status: b.status,
@@ -372,6 +373,7 @@ router.get(
       business: {
         id: b.id,
         name: b.name,
+        has_logo: !!b.has_logo,
         website: b.website,
         slug: b.slug,
         category: b.category,
@@ -630,7 +632,8 @@ router.get(
       query(
         `SELECT p.id, p.referral_code, p.partner_type, p.status, p.total_referrals,
                 p.total_earnings_tzs, p.last_active_at, p.created_at,
-                u.name, u.email, u.phone, u.status AS user_status,
+                u.id AS user_id, u.name, u.email, u.phone, u.status AS user_status,
+                u.avatar_color, u.has_avatar,
                 b.name AS business_name, b.id AS business_id
            FROM partners p
            JOIN users u ON u.id = p.user_id
@@ -647,9 +650,12 @@ router.get(
 
     const items = rows.map((r) => ({
       id: r.id,
+      user_id: r.user_id,
       name: r.name,
       email: r.email,
       phone: r.phone ? maskPhone(r.phone) : null,
+      avatar_color: r.avatar_color,
+      has_avatar: !!r.has_avatar,
       partner_type: r.partner_type,
       business_id: r.business_id,
       business_name: r.business_name,
@@ -672,6 +678,7 @@ router.get(
   asyncRoute(async (req, res) => {
     const p = await queryOne(
       `SELECT p.*, u.name, u.email, u.phone, u.status AS user_status, u.last_login_at,
+              u.avatar_color, u.has_avatar,
               u.created_at AS joined_at, b.name AS business_name, b.commission_rate AS business_rate,
               b.signup_url_template
          FROM partners p
@@ -722,6 +729,8 @@ router.get(
         email: p.email,
         phone: p.phone,
         phone_masked: maskPhone(p.phone),
+        avatar_color: p.avatar_color,
+        has_avatar: !!p.has_avatar,
         partner_type: p.partner_type,
         referral_code: p.referral_code,
         referral_link: buildReferralLink(p.signup_url_template, p.referral_code),

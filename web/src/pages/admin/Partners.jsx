@@ -21,6 +21,7 @@ import {
   SkeletonRows,
   Textarea,
 } from '../../components/UI.jsx';
+import { AvatarUpload } from '../../components/AvatarUpload.jsx';
 import { useApi, useDebounced } from '../../hooks/useApi.js';
 import { api, downloadFile, qs } from '../../lib/api.js';
 import { useAuth } from '../../app/AuthContext.jsx';
@@ -139,7 +140,7 @@ export default function AdminPartners() {
                           name={p.name}
                           size="sm"
                           square={p.partner_type === 'institution'}
-                          color={p.partner_type === 'institution' ? '#0f3460' : '#01989f'}
+                          color={p.avatar_color || (p.partner_type === 'institution' ? '#0f3460' : '#01989f')}
                         />
                         <span>
                           {p.name}
@@ -273,12 +274,28 @@ function PartnerDrawer({ partnerId, onClose, onChanged }) {
           <SkeletonRows count={5} />
         ) : !data ? null : (
           <div className="stack">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <Avatar
-                name={p.name}
-                size="lg"
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              {/* Pazo staff onboard partners on their behalf, so the picture
+                  is editable here without asking the partner to sign in. */}
+              <AvatarUpload
+                user={{
+                  id: p.user_id,
+                  name: p.name,
+                  avatar_color: p.partner_type === 'institution' ? '#0f3460' : '#01989f',
+                  has_avatar: p.has_avatar,
+                }}
+                size={72}
                 square={p.partner_type === 'institution'}
-                color={p.partner_type === 'institution' ? '#0f3460' : '#01989f'}
+                label={p.partner_type === 'institution' ? 'Organisation logo' : 'Profile picture'}
+                endpoints={{
+                  get: (u) => `/media/avatar/${u.id}`,
+                  put: `/media/admin/avatar/${p.user_id}`,
+                  del: `/media/admin/avatar/${p.user_id}`,
+                }}
+                onChanged={() => {
+                  reload({ quiet: true });
+                  onChanged();
+                }}
               />
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 'var(--t-lg)', fontWeight: 800, color: 'var(--navy)' }}>
