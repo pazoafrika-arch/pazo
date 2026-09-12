@@ -785,28 +785,43 @@
   letter-spacing: -0.02em;
   user-select: none;
 }
+/* Thumbnail sizes. 40px is what list rows use across common apps: big enough
+   that a logo or a face is recognisable at a glance, small enough that a row
+   stays a row. */
 .avatar-sm {
-  width: 30px;
-  height: 30px;
-  font-size: var(--t-xs);
-}
-.avatar-md {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   font-size: var(--t-sm);
 }
+.avatar-md {
+  width: 44px;
+  height: 44px;
+  font-size: var(--t-base);
+}
 .avatar-lg {
-  width: 60px;
-  height: 60px;
-  font-size: var(--t-lg);
+  width: 64px;
+  height: 64px;
+  font-size: var(--t-xl);
 }
 .avatar-xl {
-  width: 84px;
-  height: 84px;
-  font-size: var(--t-2xl);
+  width: 96px;
+  height: 96px;
+  font-size: var(--t-3xl);
 }
 .avatar-square {
   border-radius: var(--r-md);
+}
+/* A picture gets a hairline edge and a little inset, the way a thumbnail is
+   drawn everywhere else. Without it, pale artwork dissolves into a white row
+   and a logo sits awkwardly flush against the crop. Monograms keep their
+   solid fill and need neither. */
+.avatar.has-image {
+  border: 1px solid var(--border);
+  padding: 2px;
+  background: #fff;
+}
+.avatar.has-image > img {
+  border-radius: inherit;
 }
 
 /* ---------------- modal ---------------- */

@@ -139,15 +139,20 @@ export function Avatar({
 
   return (
     <div
-      className={`avatar avatar-${size} ${square ? 'avatar-square' : ''}`}
-      style={{ background: resolved ? 'var(--gray-100)' : color }}
+      className={`avatar avatar-${size} ${square ? 'avatar-square' : ''} ${
+        resolved ? 'has-image' : ''
+      }`}
+      style={resolved ? undefined : { background: color }}
       aria-hidden="true"
     >
       {resolved ? (
+        // `contain`, not `cover`: stored pictures are already square, and
+        // anything that is not stays whole rather than having its edges
+        // clipped, which matters for a logo.
         <img
           src={resolved}
           alt=""
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
         />
       ) : (
         toInitials(name)
