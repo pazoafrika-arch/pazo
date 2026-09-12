@@ -20,9 +20,51 @@ import { initials as toInitials } from '../lib/format.js';
 const OUTPUT_SIZE = 256;
 const MAX_INPUT_BYTES = 10 * 1024 * 1024; // before resizing
 
+// A photo can be cropped to a square without losing its subject, but a wide
+// logo cannot: cropping a banner to a square slices the wordmark off both
+// ends and leaves an unreadable smudge in a 32px table row. So anything far
+// from square is fitted whole inside the square instead, on its own ground.
+const CROP_TOLERANCE = 1.2;
+
+/** Sample the corners to guess a background that suits the artwork. */
+function groundColour(img, w, h) {
+  try {
+    const probe = document.createElement('canvas');
+    probe.width = w;
+    probe.height = h;
+    const pctx = probe.getContext('2d', { willReadFrequently: true });
+    pctx.drawImage(img, 0, 0, w, h);
+    const pts = [
+      [0, 0],
+      [w - 1, 0],
+      [0, h - 1],
+      [w - 1, h - 1],
+    ];
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    let opaque = 0;
+    for (const [x, y] of pts) {
+      const d = pctx.getImageData(x, y, 1, 1).data;
+      if (d[3] < 128) continue; // transparent corner: the artwork wants white
+      r += d[0];
+      g += d[1];
+      b += d[2];
+      opaque += 1;
+    }
+    if (!opaque) return '#ffffff';
+    return `rgb(${Math.round(r / opaque)}, ${Math.round(g / opaque)}, ${Math.round(b / opaque)})`;
+  } catch {
+    // A cross-origin image taints the canvas and blocks reads. White is safe.
+    return '#ffffff';
+  }
+}
+
 /**
- * Draw the image centre-cropped to a square and return a JPEG data URL.
- * JPEG rather than PNG because a photo at 256px is several times smaller.
+ * Draw the image into a square and return a JPEG data URL.
+ * Near-square images are centre-cropped; wide or tall ones are fitted whole so
+ * a logo stays readable. JPEG rather than PNG because a photo at 256px is
+ * several times smaller.
  */
 function cropToSquare(file) {
   return new Promise((resolve, reject) => {
@@ -30,19 +72,29 @@ function cropToSquare(file) {
     const img = new Image();
     img.onload = () => {
       URL.revokeObjectURL(url);
-      const side = Math.min(img.naturalWidth, img.naturalHeight);
-      const sx = (img.naturalWidth - side) / 2;
-      const sy = (img.naturalHeight - side) / 2;
+      const nw = img.naturalWidth;
+      const nh = img.naturalHeight;
+      const ratio = Math.max(nw / nh, nh / nw);
 
       const canvas = document.createElement('canvas');
       canvas.width = OUTPUT_SIZE;
       canvas.height = OUTPUT_SIZE;
       const ctx = canvas.getContext('2d');
-      // White ground so a transparent PNG does not become black once encoded.
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = ratio > CROP_TOLERANCE ? groundColour(img, nw, nh) : '#ffffff';
       ctx.fillRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
       ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(img, sx, sy, side, side, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+
+      if (ratio > CROP_TOLERANCE) {
+        // Fit the whole image, with a small margin so it is not edge to edge.
+        const box = OUTPUT_SIZE * 0.88;
+        const scale = Math.min(box / nw, box / nh);
+        const dw = nw * scale;
+        const dh = nh * scale;
+        ctx.drawImage(img, (OUTPUT_SIZE - dw) / 2, (OUTPUT_SIZE - dh) / 2, dw, dh);
+      } else {
+        const side = Math.min(nw, nh);
+        ctx.drawImage(img, (nw - side) / 2, (nh - side) / 2, side, side, 0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+      }
 
       resolve(canvas.toDataURL('image/jpeg', 0.88));
     };
