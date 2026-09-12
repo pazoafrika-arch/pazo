@@ -7,7 +7,13 @@
  * Concurrent 401s share a single refresh promise rather than stampeding.
  */
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1';
+/**
+ * The API lives on the same origin in every real deployment: nginx proxies
+ * /api, and on a platform the Node process serves both. A relative path is
+ * therefore the correct default, and it is what the Vite dev proxy expects
+ * too. VITE_API_URL only needs setting when the API is on another host.
+ */
+const BASE = import.meta.env.VITE_API_URL || '/api/v1';
 const REFRESH_KEY = 'pazo.refresh';
 const USER_KEY = 'pazo.user';
 
