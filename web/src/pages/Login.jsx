@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Logo } from '../components/Logo.jsx';
-import { Icon } from '../components/Icon.jsx';
 import { Banner, Button, Field, Input, PasswordInput } from '../components/UI.jsx';
 import { useAuth, HOME_FOR_ROLE } from '../app/AuthContext.jsx';
 import { useApi, useSubmit } from '../hooks/useApi.js';
@@ -126,7 +125,6 @@ export default function Login() {
                   marginBottom: 6,
                 }}
               >
-                <Icon name="sparkles" size={14} />
                 Demo accounts — tap to fill
               </div>
               {[

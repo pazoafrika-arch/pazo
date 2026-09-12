@@ -15,6 +15,8 @@ import {
   Modal,
   PasswordInput,
 } from '../../components/UI.jsx';
+import { AvatarUpload } from '../../components/AvatarUpload.jsx';
+import { EditableRow } from '../../components/EditableRow.jsx';
 import { useApi } from '../../hooks/useApi.js';
 import { api } from '../../lib/api.js';
 import { useAuth } from '../../app/AuthContext.jsx';
@@ -24,10 +26,20 @@ import { date, phone as fmtPhone } from '../../lib/format.js';
 export default function IndividualProfile() {
   const toast = useToast();
   const navigate = useNavigate();
-  const { signOut, patchUser } = useAuth();
+  const { signOut, patchUser, user: authUser } = useAuth();
   const { data, loading, reload } = useApi('/individual/me');
 
-  const [editOpen, setEditOpen] = useState(false);
+  /**
+   * Save one field. Used by every inline row, so a single failure path and a
+   * single success toast cover the whole screen.
+   */
+  const save = async (patch) => {
+    const res = await api.put('/individual/me', patch);
+    if (res?.name) patchUser({ name: res.name });
+    reload({ quiet: true });
+    toast.success('Saved');
+  };
+
   const [phoneOpen, setPhoneOpen] = useState(false);
   const [payoutOpen, setPayoutOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
@@ -56,51 +68,86 @@ export default function IndividualProfile() {
     <div className="stack">
       {/* Identity */}
       <Card>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-4)' }}>
-          <Avatar name={user.name} color={user.avatar_color} size="lg" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-5)', flexWrap: 'wrap' }}>
+          <AvatarUpload
+            user={{ ...user, has_avatar: authUser?.has_avatar }}
+            size={88}
+            onChanged={(patch) => {
+              patchUser(patch);
+              reload({ quiet: true });
+            }}
+          />
           <div style={{ minWidth: 0, flex: 1 }}>
-            <div style={{ fontSize: 'var(--t-xl)', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--navy)' }}>
+            <div
+              style={{
+                fontSize: 'var(--t-xl)',
+                fontWeight: 800,
+                letterSpacing: '-0.03em',
+                color: 'var(--navy)',
+              }}
+            >
               {user.name}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 5, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6, flexWrap: 'wrap' }}>
               <Badge tone="teal">{partner.referral_code}</Badge>
               <span style={{ fontSize: 'var(--t-sm)', color: 'var(--text-3)' }}>
                 Partner since {date(user.member_since)}
               </span>
             </div>
+            <div className="field-hint" style={{ marginTop: 8 }}>
+              Tap your picture to change it
+            </div>
           </div>
         </div>
       </Card>
 
-      {/* Personal details */}
+      {/* Personal details — each row edits in place */}
       <Card pad={false}>
         <div className="card-head">
-          <div className="card-title">Personal information</div>
-          <Button variant="ghost" size="sm" icon="edit" onClick={() => setEditOpen(true)}>
-            Edit
-          </Button>
+          <div>
+            <div className="card-title">Personal information</div>
+            <div className="card-subtitle">Tap any row to change it</div>
+          </div>
         </div>
-        <div style={{ padding: 'var(--s-5)' }}>
-          <DetailList
-            items={[
-              { label: 'Full name', value: user.name },
-              { label: 'Email address', value: user.email },
-              {
-                label: 'Login phone',
-                value: (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                    {fmtPhone(user.phone)}
-                    <button
-                      onClick={() => setPhoneOpen(true)}
-                      style={{ color: 'var(--teal)', fontSize: 'var(--t-sm)', fontWeight: 600 }}
-                    >
-                      Change
-                    </button>
-                  </span>
-                ),
-              },
-              { label: 'WhatsApp', value: fmtPhone(profile.whatsapp_number) },
-            ]}
+        <div style={{ padding: '0 var(--s-5)' }}>
+          <EditableRow
+            label="First name"
+            value={profile.first_name}
+            onSave={(v) => save({ first_name: v })}
+            validate={(v) => (v.trim().length < 2 ? 'Enter your first name' : null)}
+          />
+          <EditableRow
+            label="Last name"
+            value={profile.last_name}
+            onSave={(v) => save({ last_name: v })}
+            validate={(v) => (v.trim().length < 2 ? 'Enter your last name' : null)}
+          />
+          <EditableRow
+            label="Email address"
+            value={user.email}
+            type="email"
+            onSave={(v) => save({ email: v })}
+            validate={(v) =>
+              /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? null : 'Enter a valid email address'
+            }
+          />
+          <EditableRow
+            label="WhatsApp number"
+            value={fmtPhone(profile.whatsapp_number)}
+            editValue={profile.whatsapp_number}
+            type="tel"
+            hint="Where commission alerts are sent"
+            onSave={(v) => save({ whatsapp_number: v })}
+            validate={(v) =>
+              /^(255|0)?[67]\d{8}$/.test(v.replace(/\D/g, '')) ? null : 'Enter a valid Tanzanian number'
+            }
+          />
+          <EditableRow
+            label="Login phone"
+            value={fmtPhone(user.phone)}
+            readOnly
+            action={{ label: 'Change', onClick: () => setPhoneOpen(true) }}
+            hint="Changing this needs a code sent to the new number"
           />
         </div>
       </Card>
@@ -194,18 +241,6 @@ export default function IndividualProfile() {
         </div>
       </Card>
 
-      <EditProfileModal
-        open={editOpen}
-        onClose={() => setEditOpen(false)}
-        data={data}
-        onSaved={(patch) => {
-          setEditOpen(false);
-          reload({ quiet: true });
-          if (patch.name) patchUser({ name: patch.name });
-          toast.success('Profile updated');
-        }}
-      />
-
       <OtpChangeModal
         open={phoneOpen}
         onClose={() => setPhoneOpen(false)}
@@ -258,91 +293,6 @@ export default function IndividualProfile() {
         tone="danger"
       />
     </div>
-  );
-}
-
-/* ---------------- edit basic details ---------------- */
-function EditProfileModal({ open, onClose, data, onSaved }) {
-  const [form, setForm] = useState({ first_name: '', last_name: '', email: '', whatsapp_number: '' });
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (open && data) {
-      setForm({
-        first_name: data.profile.first_name || '',
-        last_name: data.profile.last_name || '',
-        email: data.user.email || '',
-        whatsapp_number: data.profile.whatsapp_number || '',
-      });
-      setError(null);
-    }
-  }, [open, data]);
-
-  const save = async () => {
-    setBusy(true);
-    setError(null);
-    try {
-      const res = await api.put('/individual/me', form);
-      onSaved(res);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title="Edit your details"
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={save} loading={busy}>
-            Save changes
-          </Button>
-        </>
-      }
-    >
-      {error && (
-        <div style={{ marginBottom: 'var(--s-4)' }}>
-          <Banner tone="error">{error}</Banner>
-        </div>
-      )}
-      <div className="field-row">
-        <Field label="First name">
-          <Input
-            value={form.first_name}
-            onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-          />
-        </Field>
-        <Field label="Last name">
-          <Input
-            value={form.last_name}
-            onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-          />
-        </Field>
-      </div>
-      <Field label="Email address">
-        <Input
-          type="email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          autoCapitalize="none"
-        />
-      </Field>
-      <Field label="WhatsApp number" hint="Where commission alerts are sent">
-        <Input
-          type="tel"
-          value={form.whatsapp_number}
-          onChange={(e) => setForm({ ...form, whatsapp_number: e.target.value })}
-        />
-      </Field>
-    </Modal>
   );
 }
 

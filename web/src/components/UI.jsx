@@ -80,14 +80,27 @@ export function Badge({ status, children, tone, dot = false, className = '' }) {
 }
 
 /* ---------------- Avatar ---------------- */
-export function Avatar({ name, color = '#01989f', size = 'md', square = false }) {
+/**
+ * Shows an uploaded picture when there is one, otherwise a monogram.
+ * The monogram is not a fallback of last resort: it is crisp at any size and
+ * needs no request, so most rows in most tables will use it.
+ */
+export function Avatar({ name, color = '#01989f', size = 'md', square = false, src = null }) {
   return (
     <div
       className={`avatar avatar-${size} ${square ? 'avatar-square' : ''}`}
-      style={{ background: color }}
+      style={{ background: src ? 'var(--gray-100)' : color }}
       aria-hidden="true"
     >
-      {toInitials(name)}
+      {src ? (
+        <img
+          src={src}
+          alt=""
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
+      ) : (
+        toInitials(name)
+      )}
     </div>
   );
 }

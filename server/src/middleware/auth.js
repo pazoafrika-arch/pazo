@@ -49,7 +49,7 @@ export async function requireAuth(req, res, next) {
     if (decoded.temp) throw unauthorized('Invalid session');
 
     const user = await queryOne(
-      `SELECT id, email, phone, role, status, name, avatar_color, created_at
+      `SELECT id, email, phone, role, status, name, avatar_color, has_avatar, created_at
          FROM users WHERE id = ? LIMIT 1`,
       [decoded.sub],
     );

@@ -78,6 +78,7 @@ export function publicUser(user) {
     role: user.role,
     status: user.status,
     avatar_color: user.avatar_color,
+    has_avatar: !!user.has_avatar,
   };
 }
 

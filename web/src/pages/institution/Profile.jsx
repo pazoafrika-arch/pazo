@@ -13,16 +13,27 @@ import {
   Modal,
   Select,
 } from '../../components/UI.jsx';
+import { AvatarUpload } from '../../components/AvatarUpload.jsx';
+import { EditableRow } from '../../components/EditableRow.jsx';
 import { ChangePasswordModal } from '../individual/Profile.jsx';
 import { useApi } from '../../hooks/useApi.js';
 import { api } from '../../lib/api.js';
+import { useAuth } from '../../app/AuthContext.jsx';
 import { useToast } from '../../app/ToastContext.jsx';
 import { date, phone as fmtPhone, ratePct } from '../../lib/format.js';
 
 export default function InstitutionProfile() {
   const toast = useToast();
   const { data, loading, reload } = useApi('/institution/me');
-  const [editOpen, setEditOpen] = useState(false);
+  const { user: authUser, patchUser } = useAuth();
+
+  /** Save one field from an inline row. */
+  const save = async (patch) => {
+    await api.put('/institution/me', patch);
+    if (patch.organisation_name) patchUser({ name: patch.organisation_name });
+    reload({ quiet: true });
+    toast.success('Saved');
+  };
   const [payoutOpen, setPayoutOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
 
@@ -34,8 +45,16 @@ export default function InstitutionProfile() {
   return (
     <div className="stack">
       <Card>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-4)' }}>
-          <Avatar name={profile.organisation_name} color={user.avatar_color} size="lg" square />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-5)', flexWrap: 'wrap' }}>
+          <AvatarUpload
+            user={{ ...user, name: profile.organisation_name, has_avatar: authUser?.has_avatar }}
+            size={88}
+            label="Organisation logo"
+            onChanged={(patch) => {
+              patchUser(patch);
+              reload({ quiet: true });
+            }}
+          />
           <div style={{ minWidth: 0, flex: 1 }}>
             <div
               style={{
@@ -54,27 +73,58 @@ export default function InstitutionProfile() {
                 Partner since {date(user.member_since)}
               </span>
             </div>
+            <div className="field-hint" style={{ marginTop: 8 }}>
+              Tap the logo to upload your own
+            </div>
           </div>
         </div>
       </Card>
 
       <Card pad={false}>
         <div className="card-head">
-          <div className="card-title">Organisation details</div>
-          <Button variant="ghost" size="sm" icon="edit" onClick={() => setEditOpen(true)}>
-            Edit
-          </Button>
+          <div>
+            <div className="card-title">Organisation details</div>
+            <div className="card-subtitle">Tap any row to change it</div>
+          </div>
         </div>
-        <div style={{ padding: 'var(--s-5)' }}>
-          <DetailList
-            items={[
-              { label: 'Organisation', value: profile.organisation_name },
-              { label: 'Industry', value: profile.industry_type || '—' },
-              { label: 'Contact person', value: profile.contact_person_name || '—' },
-              { label: 'Contact email', value: user.email },
-              { label: 'Contact phone', value: fmtPhone(profile.contact_phone) },
-              { label: 'Commission rate', value: ratePct(partner.commission_rate) },
-            ]}
+        <div style={{ padding: '0 var(--s-5)' }}>
+          <EditableRow
+            label="Organisation"
+            value={profile.organisation_name}
+            onSave={(v) => save({ organisation_name: v })}
+            validate={(v) => (v.trim().length < 2 ? 'Enter your organisation name' : null)}
+          />
+          <EditableRow
+            label="Contact person"
+            value={profile.contact_person_name}
+            onSave={(v) => save({ contact_person_name: v })}
+            validate={(v) => (v.trim().length < 2 ? 'Enter a contact person' : null)}
+          />
+          <EditableRow
+            label="Contact email"
+            value={user.email}
+            type="email"
+            onSave={(v) => save({ email: v })}
+            validate={(v) =>
+              /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? null : 'Enter a valid email address'
+            }
+          />
+          <EditableRow
+            label="Contact phone"
+            value={fmtPhone(profile.contact_phone)}
+            editValue={profile.contact_phone}
+            type="tel"
+            onSave={(v) => save({ contact_phone: v })}
+            validate={(v) =>
+              /^(255|0)?[67]\d{8}$/.test(v.replace(/\D/g, '')) ? null : 'Enter a valid Tanzanian number'
+            }
+          />
+          <EditableRow label="Industry" value={profile.industry_type} readOnly />
+          <EditableRow
+            label="Commission rate"
+            value={ratePct(partner.commission_rate)}
+            readOnly
+            hint="Set by the business running the programme"
           />
         </div>
       </Card>
@@ -151,16 +201,6 @@ export default function InstitutionProfile() {
         </div>
       </Card>
 
-      <EditOrgModal
-        open={editOpen}
-        onClose={() => setEditOpen(false)}
-        data={data}
-        onSaved={() => {
-          setEditOpen(false);
-          reload({ quiet: true });
-          toast.success('Details updated');
-        }}
-      />
 
       <PayoutModal
         open={payoutOpen}
@@ -182,88 +222,6 @@ export default function InstitutionProfile() {
         }}
       />
     </div>
-  );
-}
-
-function EditOrgModal({ open, onClose, data, onSaved }) {
-  const [form, setForm] = useState({});
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (open && data) {
-      setForm({
-        organisation_name: data.profile.organisation_name || '',
-        contact_person_name: data.profile.contact_person_name || '',
-        contact_phone: data.profile.contact_phone || '',
-        email: data.user.email || '',
-      });
-      setError(null);
-    }
-  }, [open, data]);
-
-  const save = async () => {
-    setBusy(true);
-    setError(null);
-    try {
-      await api.put('/institution/me', form);
-      onSaved();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title="Edit organisation details"
-      footer={
-        <>
-          <Button variant="ghost" onClick={onClose} disabled={busy}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={save} loading={busy}>
-            Save changes
-          </Button>
-        </>
-      }
-    >
-      {error && (
-        <div style={{ marginBottom: 'var(--s-4)' }}>
-          <Banner tone="error">{error}</Banner>
-        </div>
-      )}
-      <Field label="Organisation name">
-        <Input
-          value={form.organisation_name || ''}
-          onChange={(e) => setForm({ ...form, organisation_name: e.target.value })}
-        />
-      </Field>
-      <Field label="Contact person">
-        <Input
-          value={form.contact_person_name || ''}
-          onChange={(e) => setForm({ ...form, contact_person_name: e.target.value })}
-        />
-      </Field>
-      <Field label="Contact email">
-        <Input
-          type="email"
-          value={form.email || ''}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          autoCapitalize="none"
-        />
-      </Field>
-      <Field label="Contact phone">
-        <Input
-          type="tel"
-          value={form.contact_phone || ''}
-          onChange={(e) => setForm({ ...form, contact_phone: e.target.value })}
-        />
-      </Field>
-    </Modal>
   );
 }
 

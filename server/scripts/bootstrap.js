@@ -34,6 +34,8 @@ async function seedDemoIfEmpty() {
   const here = path.dirname(fileURLToPath(import.meta.url));
   try {
     execFileSync(process.execPath, [path.join(here, 'seed.js')], { stdio: 'inherit' });
+    // Brand images are a separate step so they can be refreshed on their own.
+    execFileSync(process.execPath, [path.join(here, 'seed-images.js')], { stdio: 'inherit' });
   } catch (err) {
     console.error('  Demo seed failed:', err.message);
   }

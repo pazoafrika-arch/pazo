@@ -21,6 +21,7 @@ import adminRoutes from './routes/admin.js';
 import publicRoutes from './routes/public.js';
 import integrationRoutes, { clickRouter } from './routes/integrations.js';
 import webhookRoutes from './routes/webhooks.js';
+import mediaRoutes from './routes/media.js';
 import { startScheduledJobs } from './jobs/scheduler.js';
 
 const app = express();
@@ -100,6 +101,8 @@ app.use(`${API}/individual`, individualRoutes);
 app.use(`${API}/institution`, institutionRoutes);
 app.use(`${API}/business`, businessRoutes);
 app.use(`${API}/admin`, adminRoutes);
+// Profile pictures and business logos. Larger body limit for base64 uploads.
+app.use(`${API}/media`, express.json({ limit: '2mb' }), mediaRoutes);
 app.use(`${API}/integrations`, integrationLimiter, integrationRoutes);
 
 // Payment gateway callbacks. Unauthenticated by design: the request is proven

@@ -775,6 +775,8 @@
 /* ---------------- avatars ---------------- */
 .avatar {
   border-radius: 50%;
+  /* Clips an uploaded picture to the circle. */
+  overflow: hidden;
   display: grid;
   place-items: center;
   color: #fff;
@@ -1251,3 +1253,193 @@
 
 /* Inputs inherit --t-base, which is 16px. That is deliberate: iOS Safari
    zooms the viewport on focus for anything smaller. */
+
+/* ---------------- avatar upload ---------------- */
+.avatar-upload {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: var(--gray-100);
+  transition: box-shadow var(--fast) var(--ease), transform var(--fast) var(--ease);
+}
+.avatar-upload:hover {
+  box-shadow: var(--shadow-md);
+}
+.avatar-upload:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+.avatar-upload.dragging {
+  box-shadow: 0 0 0 3px var(--teal);
+  transform: scale(1.02);
+}
+.avatar-upload-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.avatar-upload-initials {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  user-select: none;
+}
+/* The pencil sits in a scrim that only appears on hover, so the picture is
+   unobstructed at rest. */
+.avatar-upload-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(13, 33, 55, 0.55);
+  color: #fff;
+  opacity: 0;
+  transition: opacity var(--fast) var(--ease);
+}
+.avatar-upload:hover .avatar-upload-overlay,
+.avatar-upload:focus-visible .avatar-upload-overlay,
+.avatar-upload.dragging .avatar-upload-overlay {
+  opacity: 1;
+}
+/* Touch devices have no hover, so show a small persistent affordance. */
+@media (hover: none) {
+  .avatar-upload-overlay {
+    opacity: 1;
+    inset: auto 0 0 auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 2px solid var(--surface);
+  }
+}
+
+.avatar-preview-lg {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  box-shadow: var(--shadow-sm);
+}
+.avatar-preview-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  box-shadow: var(--shadow-xs);
+}
+
+/* ---------------- editable settings row ---------------- */
+.editable-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 34%) 1fr;
+  gap: 4px var(--s-4);
+  align-items: center;
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--gray-100);
+  transition: background var(--fast) var(--ease);
+  border-radius: var(--r-sm);
+}
+.editable-row:last-child {
+  border-bottom: none;
+}
+.editable-row:not(.readonly):not(.editing) {
+  cursor: pointer;
+}
+.editable-row:not(.readonly):not(.editing):hover {
+  background: var(--surface-sunken);
+  /* Bleed slightly so the hover reads as a row, not a boxed field. */
+  box-shadow: 0 0 0 8px var(--surface-sunken);
+}
+.editable-row:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+.editable-row-label {
+  font-size: var(--t-sm);
+  color: var(--text-3);
+  font-weight: 500;
+}
+.editable-row-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-width: 0;
+}
+.editable-row-text {
+  font-size: var(--t-base);
+  font-weight: 600;
+  color: var(--navy);
+  overflow-wrap: anywhere;
+}
+.editable-row-text em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--gray-400);
+}
+.editable-row-pencil {
+  color: var(--gray-300);
+  flex-shrink: 0;
+  transition: color var(--fast) var(--ease);
+}
+.editable-row:hover .editable-row-pencil {
+  color: var(--teal);
+}
+.editable-row-action {
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--teal);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.editable-row-action:hover {
+  text-decoration: underline;
+}
+.editable-row-hint {
+  grid-column: 2;
+  margin-top: 2px;
+}
+.editable-row-edit {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.editable-row-edit .input {
+  flex: 1;
+  min-width: 150px;
+}
+.editable-row-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Stacked on phones: a two-column grid squeezes both halves too far. */
+@media (max-width: 620px) {
+  .editable-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .editable-row-hint {
+    grid-column: 1;
+  }
+  .editable-row-edit .input {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+  .editable-row-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
