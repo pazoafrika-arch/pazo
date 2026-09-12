@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from './Icon.jsx';
 import { statusTone, statusLabel, initials as toInitials, copyToClipboard } from '../lib/format.js';
+import { loadAvatar, onAvatarChange } from '../lib/avatarCache.js';
 import { useToast } from '../app/ToastContext.jsx';
 
 /* ---------------- Button ---------------- */
@@ -82,19 +83,69 @@ export function Badge({ status, children, tone, dot = false, className = '' }) {
 /* ---------------- Avatar ---------------- */
 /**
  * Shows an uploaded picture when there is one, otherwise a monogram.
+ *
+ * Pass `userId` (or `businessId`) and the picture is fetched through the shared
+ * cache, so a table of fifty partners makes one request per distinct person
+ * rather than one per row. Pass `hasImage: false` to skip the request entirely
+ * when the API has already said there is no picture.
+ *
  * The monogram is not a fallback of last resort: it is crisp at any size and
- * needs no request, so most rows in most tables will use it.
+ * needs no request, so most rows will use it.
  */
-export function Avatar({ name, color = '#01989f', size = 'md', square = false, src = null }) {
+export function Avatar({
+  name,
+  color = '#01989f',
+  size = 'md',
+  square = false,
+  src = null,
+  userId = null,
+  businessId = null,
+  hasImage,
+}) {
+  const [resolved, setResolved] = useState(src);
+
+  const kind = businessId ? 'business' : 'user';
+  const id = businessId || userId;
+
+  useEffect(() => {
+    // An explicit src wins; nothing to fetch.
+    if (src) {
+      setResolved(src);
+      return undefined;
+    }
+    // No id, or the API already told us there is no image.
+    if (!id || hasImage === false) {
+      setResolved(null);
+      return undefined;
+    }
+
+    let cancelled = false;
+    loadAvatar(kind, id).then((url) => {
+      if (!cancelled) setResolved(url);
+    });
+
+    // Repaint when someone uploads or removes this image anywhere in the app.
+    const off = onAvatarChange((changedKey) => {
+      if (changedKey === '*' || changedKey === `${kind}:${id}`) {
+        loadAvatar(kind, id).then((url) => !cancelled && setResolved(url));
+      }
+    });
+
+    return () => {
+      cancelled = true;
+      off();
+    };
+  }, [src, kind, id, hasImage]);
+
   return (
     <div
       className={`avatar avatar-${size} ${square ? 'avatar-square' : ''}`}
-      style={{ background: src ? 'var(--gray-100)' : color }}
+      style={{ background: resolved ? 'var(--gray-100)' : color }}
       aria-hidden="true"
     >
-      {src ? (
+      {resolved ? (
         <img
-          src={src}
+          src={resolved}
           alt=""
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />

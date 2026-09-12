@@ -136,6 +136,8 @@ export default function BusinessPartners() {
                           size="sm"
                           square={p.partner_type === 'institution'}
                           color={p.partner_type === 'institution' ? '#0f3460' : '#01989f'}
+                          userId={p.user_id}
+                          hasImage={p.has_avatar}
                         />
                         <span>
                           {p.name}
@@ -264,6 +266,8 @@ function PartnerDrawer({ partnerId, onClose, onChanged }) {
                 size="lg"
                 square={p.partner_type === 'institution'}
                 color={p.partner_type === 'institution' ? '#0f3460' : '#01989f'}
+                userId={p.user_id}
+                hasImage={p.has_avatar}
               />
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 'var(--t-lg)', fontWeight: 800, color: 'var(--navy)' }}>

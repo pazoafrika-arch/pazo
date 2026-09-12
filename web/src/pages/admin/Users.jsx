@@ -148,7 +148,7 @@ export default function AdminUsers() {
                   <tr key={u.id}>
                     <td className="cell-primary" data-label="Name">
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-                        <Avatar name={u.name} size="sm" />
+                        <Avatar name={u.name} size="sm" userId={u.id} hasImage={u.has_avatar} />
                         {u.name}
                       </span>
                     </td>

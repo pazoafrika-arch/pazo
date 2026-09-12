@@ -167,7 +167,13 @@ function UserMenu({ items = [] }) {
         aria-label="Account menu"
         aria-expanded={open}
       >
-        <Avatar name={user?.name} color={user?.avatar_color} size="md" />
+        <Avatar
+          name={user?.name}
+          color={user?.avatar_color}
+          size="md"
+          userId={user?.id}
+          hasImage={user?.has_avatar}
+        />
       </button>
 
       {open && (
@@ -284,7 +290,13 @@ export function ConsoleShell({
 
         <div className="sidebar-foot">
           <div className="sidebar-user">
-            <Avatar name={user?.name} color={user?.avatar_color} size="sm" />
+            <Avatar
+              name={user?.name}
+              color={user?.avatar_color}
+              size="sm"
+              userId={user?.id}
+              hasImage={user?.has_avatar}
+            />
             <div className="sidebar-user-body">
               <div className="sidebar-user-name">{user?.name}</div>
               <div className="sidebar-user-role">{roleLabel(user?.role)}</div>

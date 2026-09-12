@@ -152,7 +152,13 @@ function PayoutsDue() {
                   <tr key={i.partner_id}>
                     <td className="cell-primary" data-label="Organisation">
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-                        <Avatar name={i.organisation_name} size="sm" square color="#0f3460" />
+                        <Avatar
+                          name={i.organisation_name}
+                          size="sm"
+                          square
+                          color="#0f3460"
+                          userId={i.user_id}
+                        />
                         <span>
                           {i.organisation_name}
                           <span

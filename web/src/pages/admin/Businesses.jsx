@@ -107,7 +107,14 @@ export default function AdminBusinesses() {
                   <tr key={b.id} className="clickable" onClick={() => setOpenId(b.id)}>
                     <td className="cell-primary" data-label="Business">
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-                        <Avatar name={b.name} size="sm" square color="#0f3460" />
+                        <Avatar
+                          name={b.name}
+                          size="sm"
+                          square
+                          color="#0f3460"
+                          businessId={b.id}
+                          hasImage={b.has_logo}
+                        />
                         <span>
                           {b.name}
                           <span
@@ -379,7 +386,7 @@ function BusinessDrawer({ businessId, onClose, onChanged, onNewKey }) {
               <div style={{ padding: '0 var(--s-4)' }}>
                 {data.team.map((t) => (
                   <div className="row-item" key={t.id}>
-                    <Avatar name={t.name} size="sm" />
+                    <Avatar name={t.name} size="sm" userId={t.user_id} />
                     <div className="row-body">
                       <div className="row-title">{t.name}</div>
                       <div className="row-sub">{t.email}</div>

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Icon } from './Icon.jsx';
 import { Button, Modal, Banner } from './UI.jsx';
 import { api, getAccessToken } from '../lib/api.js';
+import { invalidateAvatar } from '../lib/avatarCache.js';
 import { useToast } from '../app/ToastContext.jsx';
 import { initials as toInitials } from '../lib/format.js';
 
@@ -71,6 +72,19 @@ export function AvatarUpload({
     get: (u) => `/media/avatar/${u.id}`,
     put: '/media/avatar',
     del: '/media/avatar',
+  };
+  // Every list on screen shares one image cache. Work out which entry this
+  // upload touches so those rows repaint instead of showing a stale monogram.
+  const subject = (() => {
+    const path = typeof paths.get === 'function' ? paths.get(user || {}) : paths.get || '';
+    const business = /\/media\/business-logo\/([\w-]+)/.exec(path);
+    if (business) return { kind: 'business', id: business[1] };
+    const avatar = /\/media\/avatar\/([\w-]+)/.exec(path);
+    if (avatar) return { kind: 'user', id: avatar[1] };
+    return user?.id ? { kind: 'user', id: user.id } : null;
+  })();
+  const refreshEverywhere = () => {
+    if (subject) invalidateAvatar(subject.kind, subject.id);
   };
   const toast = useToast();
   const inputRef = useRef(null);
@@ -155,6 +169,7 @@ export function AvatarUpload({
     setError(null);
     try {
       await api.put(paths.put, { image: preview });
+      refreshEverywhere();
       setVersion((v) => v + 1);
       setOpen(false);
       setPreview(null);
@@ -171,6 +186,7 @@ export function AvatarUpload({
     setBusy(true);
     try {
       await api.del(paths.del);
+      refreshEverywhere();
       setSrc(null);
       setVersion((v) => v + 1);
       setOpen(false);

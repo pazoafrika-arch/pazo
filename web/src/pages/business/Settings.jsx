@@ -246,7 +246,7 @@ export default function BusinessSettings() {
         <div style={{ padding: '0 var(--s-5)' }}>
           {data.team.map((m) => (
             <div className="row-item" key={m.id}>
-              <Avatar name={m.name} size="md" />
+              <Avatar name={m.name} size="md" userId={m.user_id} />
               <div className="row-body">
                 <div className="row-title">{m.name}</div>
                 <div className="row-sub">

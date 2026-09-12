@@ -7,6 +7,7 @@ import {
   setSession,
   setUnauthenticatedHandler,
 } from '../lib/api.js';
+import { clearAvatarCache } from '../lib/avatarCache.js';
 
 const AuthContext = createContext(null);
 
@@ -33,6 +34,7 @@ export function AuthProvider({ children }) {
       }
     }
     clearSession();
+    clearAvatarCache();
     setUser(null);
   }, []);
 

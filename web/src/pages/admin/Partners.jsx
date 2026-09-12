@@ -141,6 +141,8 @@ export default function AdminPartners() {
                           size="sm"
                           square={p.partner_type === 'institution'}
                           color={p.avatar_color || (p.partner_type === 'institution' ? '#0f3460' : '#01989f')}
+                          userId={p.user_id}
+                          hasImage={p.has_avatar}
                         />
                         <span>
                           {p.name}

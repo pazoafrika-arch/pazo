@@ -350,7 +350,8 @@ router.get(
         [req.params.id, req.params.id, req.params.id, req.params.id, req.params.id, req.params.id, req.params.id],
       ),
       query(
-        `SELECT bm.id, bm.access, bm.is_owner, u.name, u.email, u.status, u.last_login_at
+        `SELECT bm.id, bm.access, bm.is_owner, u.id AS user_id, u.name, u.email,
+                u.status, u.has_avatar, u.last_login_at
            FROM business_members bm JOIN users u ON u.id = bm.user_id
           WHERE bm.business_id = ? ORDER BY bm.is_owner DESC`,
         [req.params.id],
@@ -1328,6 +1329,7 @@ router.get(
     const items = rows
       .map((r) => ({
         partner_id: r.partner_id,
+        user_id: r.user_id,
         organisation_name: r.organisation_name,
         referral_code: r.referral_code,
         accumulated_balance_tzs: Number(r.accumulated_balance_tzs),
@@ -2233,14 +2235,19 @@ router.get(
 
     const [rows, count] = await Promise.all([
       query(
-        `SELECT id, name, email, phone, role, status, last_login_at, created_at
+        `SELECT id, name, email, phone, role, status, avatar_color, has_avatar,
+                last_login_at, created_at
            FROM users ${whereSql} ORDER BY created_at DESC LIMIT ? OFFSET ?`,
         [...params, limit, offset],
       ),
       queryOne(`SELECT COUNT(*) AS n FROM users ${whereSql}`, params),
     ]);
 
-    const items = rows.map((u) => ({ ...u, phone: u.phone ? maskPhone(u.phone) : null }));
+    const items = rows.map((u) => ({
+      ...u,
+      phone: u.phone ? maskPhone(u.phone) : null,
+      has_avatar: !!u.has_avatar,
+    }));
     if (req.query.format === 'csv') return sendCsv(res, 'pazo-users', items);
     return ok(res, paged(items, Number(count.n), page, limit));
   }),

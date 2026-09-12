@@ -194,7 +194,7 @@ router.get(
     const rows = await query(
       `SELECT p.id, p.referral_code, p.partner_type, p.status, p.total_referrals,
               p.total_earnings_tzs, p.created_at, p.last_active_at,
-              u.name, u.email, u.phone,
+              u.id AS user_id, u.name, u.email, u.phone, u.avatar_color, u.has_avatar,
               COALESCE(m.referrals_month, 0) AS referrals_month,
               COALESCE(s.sales_tzs, 0)       AS sales_tzs,
               COALESCE(s.commission_tzs, 0)  AS commission_tzs
@@ -224,7 +224,10 @@ router.get(
 
     const items = rows.map((r) => ({
       id: r.id,
+      user_id: r.user_id,
       name: r.name,
+      avatar_color: r.avatar_color,
+      has_avatar: !!r.has_avatar,
       partner_type: r.partner_type,
       referral_code: r.referral_code,
       referrals_this_month: Number(r.referrals_month),
@@ -252,7 +255,8 @@ router.get(
   '/me/partners/:id',
   asyncRoute(async (req, res) => {
     const partner = await queryOne(
-      `SELECT p.*, u.name, u.email, u.phone, u.created_at AS joined_at, u.status AS user_status
+      `SELECT p.*, u.name, u.email, u.phone, u.avatar_color, u.has_avatar,
+              u.created_at AS joined_at, u.status AS user_status
          FROM partners p JOIN users u ON u.id = p.user_id
         WHERE p.id = ? AND p.business_id = ? LIMIT 1`,
       [req.params.id, req.business.id],
@@ -302,7 +306,10 @@ router.get(
     return ok(res, {
       partner: {
         id: partner.id,
+        user_id: partner.user_id,
         name: partner.name,
+        avatar_color: partner.avatar_color,
+        has_avatar: !!partner.has_avatar,
         email: partner.email,
         phone: partner.phone ? maskPhone(partner.phone) : null,
         partner_type: partner.partner_type,
@@ -664,7 +671,8 @@ router.get(
   '/me/settings',
   asyncRoute(async (req, res) => {
     const members = await query(
-      `SELECT bm.id, bm.access, bm.is_owner, u.id AS user_id, u.name, u.email, u.status, u.last_login_at
+      `SELECT bm.id, bm.access, bm.is_owner, u.id AS user_id, u.name, u.email,
+              u.status, u.has_avatar, u.last_login_at
          FROM business_members bm JOIN users u ON u.id = bm.user_id
         WHERE bm.business_id = ? ORDER BY bm.is_owner DESC, u.name ASC`,
       [req.business.id],
@@ -697,6 +705,7 @@ router.get(
         access: m.access,
         is_owner: !!m.is_owner,
         status: m.status,
+        has_avatar: !!m.has_avatar,
         last_login_at: m.last_login_at,
       })),
       my_access: req.business.member_access,
