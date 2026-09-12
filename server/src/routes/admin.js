@@ -635,7 +635,7 @@ router.get(
                 p.total_earnings_tzs, p.last_active_at, p.created_at,
                 u.id AS user_id, u.name, u.email, u.phone, u.status AS user_status,
                 u.avatar_color, u.has_avatar,
-                b.name AS business_name, b.id AS business_id
+                b.name AS business_name, b.id AS business_id, b.has_logo AS business_has_logo
            FROM partners p
            JOIN users u ON u.id = p.user_id
            JOIN businesses b ON b.id = p.business_id
@@ -660,6 +660,7 @@ router.get(
       partner_type: r.partner_type,
       business_id: r.business_id,
       business_name: r.business_name,
+      business_has_logo: !!r.business_has_logo,
       referral_code: r.referral_code,
       status: r.status,
       total_referrals: Number(r.total_referrals),
@@ -1192,7 +1193,8 @@ router.get(
 
     const [rows, count, totals] = await Promise.all([
       query(
-        `SELECT t.*, u.name AS partner_name, p.referral_code, b.name AS business_name,
+        `SELECT t.*, u.name AS partner_name, p.referral_code,
+                b.name AS business_name, b.id AS business_id, b.has_logo AS business_has_logo,
                 r.tourist_external_id
            FROM transactions t
            LEFT JOIN partners p ON p.id = t.partner_id
@@ -1226,6 +1228,8 @@ router.get(
       id: t.id,
       created_at: t.created_at,
       business_name: t.business_name,
+      business_id: t.business_id,
+      business_has_logo: !!t.business_has_logo,
       partner_name: t.partner_name || 'No partner',
       referral_code: t.referral_code,
       customer_id: t.tourist_external_id,
@@ -2348,7 +2352,8 @@ router.get(
     const { page, limit, offset } = pagination(req);
     const [rows, count] = await Promise.all([
       query(
-        `SELECT l.*, b.name AS business_name FROM api_request_log l
+        `SELECT l.*, b.name AS business_name, b.has_logo AS business_has_logo
+           FROM api_request_log l
            LEFT JOIN businesses b ON b.id = l.business_id
           ORDER BY l.created_at DESC LIMIT ? OFFSET ?`,
         [limit, offset],

@@ -161,6 +161,27 @@ export function Avatar({
   );
 }
 
+/**
+ * An organisation's name next to its logo, for columns that name a business.
+ * Falls back to the name alone when there is nothing to show.
+ */
+export function BrandCell({ name, businessId, hasLogo, color = '#0f3460' }) {
+  if (!name) return '—';
+  return (
+    <span className="brand-cell">
+      <Avatar
+        name={name}
+        size="xs"
+        square
+        color={color}
+        businessId={businessId}
+        hasImage={hasLogo}
+      />
+      <span>{name}</span>
+    </span>
+  );
+}
+
 /* ---------------- Stat ---------------- */
 export function Stat({ label, value, icon, delta, hint, tone, onClick }) {
   const deltaClass = delta === undefined || delta === null ? null : delta > 0 ? 'up' : delta < 0 ? 'down' : 'flat';

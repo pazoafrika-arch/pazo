@@ -4,6 +4,7 @@ import {
   Avatar,
   Badge,
   Banner,
+  BrandCell,
   Button,
   Card,
   ConfirmDialog,
@@ -164,7 +165,13 @@ export default function AdminPartners() {
                         {statusLabel(p.partner_type)}
                       </Badge>
                     </td>
-                    <td data-label="Business">{p.business_name}</td>
+                    <td data-label="Business">
+                      <BrandCell
+                        name={p.business_name}
+                        businessId={p.business_id}
+                        hasLogo={p.business_has_logo}
+                      />
+                    </td>
                     <td data-label="Code">
                       <Badge tone="gray">{p.referral_code}</Badge>
                     </td>

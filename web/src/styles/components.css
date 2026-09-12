@@ -808,8 +808,32 @@
   height: 96px;
   font-size: var(--t-3xl);
 }
+/* A mark shown beside a secondary column, smaller than the row's own
+   thumbnail so it supports the name rather than competing with it. At this
+   size only a compact emblem reads; a wordmark becomes a smudge, so callers
+   pass the name alone when that is all the brand has. */
+.avatar-xs {
+  width: 26px;
+  height: 26px;
+  font-size: 9px;
+}
 .avatar-square {
   border-radius: var(--r-md);
+}
+.avatar-xs.avatar-square {
+  border-radius: var(--r-sm);
+}
+/* Name with its logo, used in columns that name an organisation. */
+.brand-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.brand-cell > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /* A picture gets a hairline edge and a little inset, the way a thumbnail is
    drawn everywhere else. Without it, pale artwork dissolves into a white row

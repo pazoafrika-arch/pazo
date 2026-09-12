@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import {
   Badge,
   Banner,
+  BrandCell,
   Button,
   Card,
   ConfirmDialog,
@@ -216,7 +217,13 @@ export default function AdminTransactions() {
                     <td className="cell-primary" data-label="Date">
                       {dateTime(t.created_at)}
                     </td>
-                    <td data-label="Business">{t.business_name}</td>
+                    <td data-label="Business">
+                      <BrandCell
+                        name={t.business_name}
+                        businessId={t.business_id}
+                        hasLogo={t.business_has_logo}
+                      />
+                    </td>
                     <td data-label="Partner">
                       {t.partner_name}
                       {t.referral_code && (

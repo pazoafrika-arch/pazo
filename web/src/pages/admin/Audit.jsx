@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Icon } from '../../components/Icon.jsx';
 import {
   Badge,
+  BrandCell,
   Button,
   Card,
   EmptyState,
@@ -169,7 +170,13 @@ function ApiLog() {
                     <td className="cell-primary" data-label="Time">
                       {dateTime(l.created_at)}
                     </td>
-                    <td data-label="Business">{l.business_name || '—'}</td>
+                    <td data-label="Business">
+                      <BrandCell
+                        name={l.business_name}
+                        businessId={l.business_id}
+                        hasLogo={l.business_has_logo}
+                      />
+                    </td>
                     <td data-label="Endpoint">
                       <code style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--t-sm)' }}>
                         {l.method} {l.endpoint}
