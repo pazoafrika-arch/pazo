@@ -83,18 +83,23 @@
   --shadow-focus: 0 0 0 3px rgba(1, 152, 159, 0.20);
 
   /* ---- type ---- */
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
 
-  --t-xs: 11px;
-  --t-sm: 12.5px;
-  --t-base: 14px;
-  --t-md: 15px;
-  --t-lg: 17px;
-  --t-xl: 20px;
-  --t-2xl: 24px;
-  --t-3xl: 30px;
-  --t-4xl: 38px;
+  /* A standard 4px-step scale, the same shape Material, Stripe and GitHub
+     use. Body text is 16px because that is the browser default and what
+     every mainstream product settled on; anything smaller is harder to read
+     on a phone and makes iOS Safari zoom on focus. No half-pixel sizes. */
+  --t-xs: 12px;
+  --t-sm: 14px;
+  --t-base: 16px;
+  --t-md: 18px;
+  --t-lg: 20px;
+  --t-xl: 24px;
+  --t-2xl: 30px;
+  --t-3xl: 36px;
+  --t-4xl: 48px;
 
   /* ---- spacing ---- */
   --s-1: 4px;

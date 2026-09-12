@@ -71,7 +71,7 @@ export default function JoinOrganisation() {
       <div className="auth-page">
         <div className="auth-card">
           <div className="auth-head">
-            <Logo height={26} />
+            <Logo height={30} />
             <h1 className="auth-title">Registration received</h1>
           </div>
           <div className="auth-body">
@@ -105,7 +105,7 @@ export default function JoinOrganisation() {
       <div className="auth-card auth-card-wide">
         <div className="auth-head">
           <Link to="/" style={{ display: 'inline-block' }}>
-            <Logo height={26} />
+            <Logo height={30} />
           </Link>
           <h1 className="auth-title">Register your organisation</h1>
           <p className="auth-sub">

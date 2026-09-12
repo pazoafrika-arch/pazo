@@ -1,0 +1,13 @@
+{
+  "name": "Pazo — Partner platform",
+  "short_name": "Pazo",
+  "description": "Share your referral link and earn commission on every purchase.",
+  "icons": [
+    { "src": "/favicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#0D2137",
+  "background_color": "#F0FAFA",
+  "display": "standalone",
+  "start_url": "/"
+}

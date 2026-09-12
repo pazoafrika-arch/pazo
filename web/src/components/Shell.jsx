@@ -254,7 +254,7 @@ export function ConsoleShell({
 
       <aside className={`sidebar ${drawerOpen ? 'open' : ''}`}>
         <div className="sidebar-brand">
-          <Logo height={24} tone="light" />
+          <Logo height={26} tone="light" />
           {brandTag && <span className="sidebar-brand-tag">{brandTag}</span>}
         </div>
 
@@ -349,7 +349,7 @@ export function PartnerShell({ tabs, title, notificationsPath, menuItems, childr
   return (
     <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
       <header className="topbar">
-        <Logo height={22} />
+        <Logo height={26} />
         <div className="topbar-spacer" />
         <div className="topbar-actions">
           {notificationsPath && <NotificationBell basePath={notificationsPath} />}

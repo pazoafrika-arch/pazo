@@ -88,7 +88,7 @@ export default function Legal() {
     <div className="public-page">
       <nav className="public-nav">
         <Link to="/">
-          <Logo height={26} />
+          <Logo height={28} />
         </Link>
         <Link to="/" className="public-nav-link">
           Back to home
@@ -133,7 +133,7 @@ export default function Legal() {
       </div>
 
       <footer className="public-footer">
-        <Logo height={20} tone="light" />
+        <Logo height={24} tone="light" />
         <div className="footer-note">Powered by Pazo · © {new Date().getFullYear()}</div>
         <div className="footer-links">
           <Link to="/legal/terms" className="footer-link">

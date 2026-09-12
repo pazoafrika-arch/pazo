@@ -12,7 +12,36 @@ import { execute, queryOne } from '../src/db/pool.js';
 import { avatarColorFor, hashPassword, uuid } from '../src/utils/crypto.js';
 import { isEmail, passwordProblem } from '../src/utils/format.js';
 
+/**
+ * Seed demo data when SEED_DEMO=true and the platform has no partners yet.
+ *
+ * Guarded on emptiness so a redeploy can never wipe real data: the seed script
+ * truncates tables, which would be catastrophic against a live database.
+ */
+async function seedDemoIfEmpty() {
+  if (String(process.env.SEED_DEMO || '').toLowerCase() !== 'true') return;
+
+  const existing = await queryOne('SELECT COUNT(*) AS n FROM partners');
+  if (Number(existing?.n || 0) > 0) {
+    console.log('  SEED_DEMO is set but partners already exist — refusing to overwrite.');
+    return;
+  }
+
+  console.log('  Seeding demo data...');
+  const { execFileSync } = await import('node:child_process');
+  const path = await import('node:path');
+  const { fileURLToPath } = await import('node:url');
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  try {
+    execFileSync(process.execPath, [path.join(here, 'seed.js')], { stdio: 'inherit' });
+  } catch (err) {
+    console.error('  Demo seed failed:', err.message);
+  }
+}
+
 async function main() {
+  await seedDemoIfEmpty();
+
   const email = String(process.env.ADMIN_EMAIL || '').trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD || '';
   const name = process.env.ADMIN_NAME || 'Pazo Admin';

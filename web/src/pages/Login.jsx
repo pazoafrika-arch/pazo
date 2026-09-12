@@ -51,7 +51,7 @@ export default function Login() {
       <div className="auth-card">
         <div className="auth-head">
           <Link to="/" style={{ display: 'inline-block' }}>
-            <Logo height={28} />
+            <Logo height={32} />
           </Link>
           <h1 className="auth-title">Welcome back</h1>
           <p className="auth-sub">Sign in to your partner dashboard</p>
@@ -113,7 +113,7 @@ export default function Login() {
             </div>
           )}
 
-          {import.meta.env.DEV && (
+          {publicData?.config?.demo_accounts_available && (
             <div className="demo-box">
               <div
                 style={{

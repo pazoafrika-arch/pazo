@@ -98,7 +98,7 @@ export default function ForgotPassword() {
       <div className="auth-card">
         <div className="auth-head">
           <Link to="/" style={{ display: 'inline-block' }}>
-            <Logo height={26} />
+            <Logo height={30} />
           </Link>
           <h1 className="auth-title">
             {step === 4 ? 'Password updated' : 'Reset your password'}

@@ -1249,11 +1249,5 @@
   }
 }
 
-/* iOS zooms on any input under 16px; bump them on small screens. */
-@media (max-width: 768px) {
-  .input,
-  .select,
-  .textarea {
-    font-size: 16px;
-  }
-}
+/* Inputs inherit --t-base, which is 16px. That is deliberate: iOS Safari
+   zooms the viewport on focus for anything smaller. */

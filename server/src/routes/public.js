@@ -42,6 +42,16 @@ router.get(
       "SELECT name, website FROM businesses WHERE status = 'active' ORDER BY created_at ASC LIMIT 1",
     );
 
+    // The login screen offers one-tap demo sign-in, but only when the seeded
+    // demo accounts actually exist. On a real deployment with real partners
+    // this is simply absent.
+    const demo = await queryOne(
+      `SELECT COUNT(*) AS n FROM users
+        WHERE email IN ('amina@demo.pazo.co.tz','serena@demo.pazo.co.tz',
+                        'demo@thetravela.com','admin@pazo.co.tz')
+          AND status = 'active'`,
+    );
+
     return ok(res, {
       content,
       config: {
@@ -52,6 +62,7 @@ router.get(
         maintenance_mode: !!maintenance,
         business_name: business?.name || 'The Travela',
         business_website: business?.website || 'thetravela.com',
+        demo_accounts_available: Number(demo?.n || 0) >= 4,
       },
     });
   }),

@@ -58,7 +58,7 @@ export default function Landing() {
   return (
     <div className="public-page">
       <nav className="public-nav">
-        <LogoLockup height={26} partner={String(config.business_website || 'travela').replace(/\.com$/, '')} />
+        <LogoLockup height={28} partner={String(config.business_website || 'travela').replace(/\.com$/, '')} />
         <div className="public-nav-links">
           <button className="public-nav-link" onClick={() => scrollTo('how')}>
             How it works
@@ -246,7 +246,7 @@ export default function Landing() {
       )}
 
       <footer className="public-footer">
-        <Logo height={20} tone="light" />
+        <Logo height={24} tone="light" />
         <div className="footer-note">
           {c.footer_note} · © {new Date().getFullYear()}
         </div>

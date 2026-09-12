@@ -12,7 +12,11 @@ export function Logo({ height = 26, tone = 'color', className = '', style }) {
   return (
     <svg
       height={height}
-      viewBox="0 0 691.95 456.04"
+      /* Tight to the wordmark. The original artboard is 692x456 but the ink
+         occupies only 531x182 of it, so the old viewBox rendered the logo at
+         40% of its requested height with the rest as empty padding. A small
+         margin is kept so the glyphs never touch the edge. */
+      viewBox="70 142 543 194"
       xmlns="http://www.w3.org/2000/svg"
       style={{ width: 'auto', ...style }}
       className={className}

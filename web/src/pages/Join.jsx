@@ -12,7 +12,7 @@ export default function Join() {
       <div className="auth-card auth-card-wide">
         <div className="auth-head">
           <Link to="/" style={{ display: 'inline-block' }}>
-            <Logo height={28} />
+            <Logo height={32} />
           </Link>
           <h1 className="auth-title">How would you like to join?</h1>
           <p className="auth-sub">Choose the option that fits you</p>
