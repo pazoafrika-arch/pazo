@@ -108,10 +108,16 @@ async function main() {
       3,
     ],
     ['hero_cta', 'Join us', 'landing', 'Hero button label', 4],
-    ['hero_image_url', '', 'landing', 'Hero image URL — leave empty to show a placeholder', 5],
+    [
+      'hero_image_url',
+      '/hero/landing.jpg',
+      'landing',
+      'Hero image URL — leave empty to show a placeholder',
+      5,
+    ],
     [
       'hero_image_alt',
-      'A Tanzanian guide sharing his referral QR code with two travellers below Mount Kilimanjaro',
+      'A taxi driver showing his phone to two travellers outside a hotel, who scan the hotel referral QR code with their own phone',
       'landing',
       'Hero image description — read aloud by screen readers',
       6,

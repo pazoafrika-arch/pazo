@@ -100,8 +100,8 @@ export default function Landing() {
               className="hero-image"
               src={heroImage}
               alt={c.hero_image_alt}
-              width="1600"
-              height="900"
+              width="1536"
+              height="1024"
               fetchpriority="high"
             />
           ) : (

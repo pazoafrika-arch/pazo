@@ -69,8 +69,9 @@
   margin: var(--s-10) auto 0;
   width: 100%;
   /* Height, not width, is the scarce dimension above the fold: cap the frame
-     and let its width follow, so the image never leaves an empty band. */
-  max-width: min(100%, calc(52vh * 16 / 9));
+     and let its width follow. The ratio matches the artwork so the whole
+     photograph shows, uncropped. */
+  max-width: min(100%, calc(52vh * 3 / 2));
   border-radius: var(--r-xl, 20px);
   overflow: hidden;
   box-shadow:
@@ -82,11 +83,10 @@
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+  /* No fixed ratio and no cropping: the image keeps its own proportions. */
 }
 .hero-image-empty {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3 / 2;
   display: flex;
   flex-direction: column;
   align-items: center;

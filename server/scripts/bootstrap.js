@@ -50,10 +50,10 @@ async function seedDemoIfEmpty() {
  * step without hand-written SQL. Existing values are never touched.
  */
 const LATER_CMS_KEYS = [
-  ['hero_image_url', '', 'Hero image URL — leave empty to show a placeholder', 5],
+  ['hero_image_url', '/hero/landing.jpg', 'Hero image URL — leave empty to show a placeholder', 5],
   [
     'hero_image_alt',
-    'A Tanzanian guide sharing his referral QR code with two travellers below Mount Kilimanjaro',
+    'A taxi driver showing his phone to two travellers outside a hotel, who scan the hotel referral QR code with their own phone',
     'Hero image description — read aloud by screen readers',
     6,
   ],
