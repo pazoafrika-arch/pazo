@@ -102,7 +102,7 @@ export default function Landing() {
               alt={c.hero_image_alt}
               width="1600"
               height="900"
-              fetchPriority="high"
+              fetchpriority="high"
             />
           ) : (
             <div className="hero-image-empty">
