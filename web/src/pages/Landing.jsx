@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Logo, LogoLockup } from '../components/Logo.jsx';
 import { Icon } from '../components/Icon.jsx';
 import { Button } from '../components/UI.jsx';
+import { Typewriter } from '../components/Typewriter.jsx';
 import { useApi } from '../hooks/useApi.js';
-import { num, tzs } from '../lib/format.js';
 import '../styles/public.css';
 
 /**
@@ -19,6 +19,8 @@ const FALLBACK = {
   hero_subtitle:
     'The Travela gives anyone instant mobile connectivity wherever they travel — no roaming fees, no paperwork. Share your link and earn every time someone connects through you.',
   hero_cta: 'Join us',
+  hero_image_alt:
+    'A Tanzanian guide sharing his referral QR code with two travellers below Mount Kilimanjaro',
   steps_eyebrow: 'How it works',
   steps_title: 'Simple. Earn forever.',
   step_1_title: 'Create your account and get your code',
@@ -38,10 +40,13 @@ const FALLBACK = {
 export default function Landing() {
   const navigate = useNavigate();
   const { data } = useApi('/public/content');
-  const { data: stats } = useApi('/public/stats');
   const [openFaq, setOpenFaq] = useState(0);
 
   const c = { ...FALLBACK, ...(data?.content || {}) };
+  // The hero image is CMS-editable so the team can swap it without a deploy.
+  // Until one is set, the slot renders a branded placeholder rather than a
+  // broken image.
+  const heroImage = c.hero_image_url || null;
   const config = data?.config || {};
   const selfSignupOpen = config.self_signup_open !== false;
 
@@ -50,10 +55,6 @@ export default function Landing() {
     .filter((f) => f.q && f.a);
 
   const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-
-  // The headline's final word is tinted, matching the brand prototype.
-  const titleParts = String(c.hero_title).trim().split(/\s+/);
-  const lastWord = titleParts.pop();
 
   return (
     <div className="public-page">
@@ -87,52 +88,29 @@ export default function Landing() {
         </Button>
       </nav>
 
-      {/* HERO */}
+      {/* HERO — the nav, one image, and the headline typing itself out. */}
       <section className="hero-section">
-        <div className="hero-pill">
-          <span className="hero-pill-dot" />
-          {c.hero_eyebrow}
-        </div>
         <h1 className="hero-h1">
-          {titleParts.map((w) => (
-            <span key={w}>
-              {w}
-              <br />
-            </span>
-          ))}
-          <em>{lastWord}</em>
+          <Typewriter text={String(c.hero_title).trim()} speed={62} />
         </h1>
-        <p className="hero-lede">{c.hero_subtitle}</p>
 
-        <div className="hero-cta-row">
-          <Button variant="primary" size="lg" iconRight="arrow-right" onClick={() => navigate('/join')}>
-            {c.hero_cta}
-          </Button>
-          <Button variant="secondary" size="lg" onClick={() => scrollTo('how')}>
-            How it works
-          </Button>
-        </div>
-
-        <div className="hero-note">
-          Already joined? <Link to="/login">Log in to your account</Link>
-        </div>
-
-        {stats && stats.active_partners > 0 && (
-          <div className="hero-proof">
-            <div className="proof-item">
-              <div className="proof-value">{num(stats.active_partners)}</div>
-              <div className="proof-label">Active partners</div>
+        <figure className="hero-figure">
+          {heroImage ? (
+            <img
+              className="hero-image"
+              src={heroImage}
+              alt={c.hero_image_alt}
+              width="1600"
+              height="900"
+              fetchPriority="high"
+            />
+          ) : (
+            <div className="hero-image-empty">
+              <Icon name="upload" size={26} />
+              <span>Hero image not set</span>
             </div>
-            <div className="proof-item">
-              <div className="proof-value">{num(stats.total_referrals)}</div>
-              <div className="proof-label">Travellers referred</div>
-            </div>
-            <div className="proof-item">
-              <div className="proof-value">{tzs(stats.commissions_paid_tzs, { compact: true })}</div>
-              <div className="proof-label">Paid to partners</div>
-            </div>
-          </div>
-        )}
+          )}
+        </figure>
       </section>
 
       {/* HOW IT WORKS */}
