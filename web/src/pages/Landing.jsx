@@ -88,29 +88,28 @@ export default function Landing() {
         </Button>
       </nav>
 
-      {/* HERO — the nav, one image, and the headline typing itself out. */}
+      {/* HERO — a full-bleed image with the headline typing itself out on top. */}
       <section className="hero-section">
+        {heroImage ? (
+          <img
+            className="hero-image"
+            src={heroImage}
+            alt={c.hero_image_alt}
+            width="1536"
+            height="1024"
+            fetchpriority="high"
+          />
+        ) : (
+          <div className="hero-image-empty">
+            <Icon name="upload" size={26} />
+            <span>Hero image not set</span>
+          </div>
+        )}
+        {/* Keeps the headline legible wherever the photograph is light. */}
+        <div className="hero-scrim" aria-hidden="true" />
         <h1 className="hero-h1">
           <Typewriter text={String(c.hero_title).trim()} speed={62} />
         </h1>
-
-        <figure className="hero-figure">
-          {heroImage ? (
-            <img
-              className="hero-image"
-              src={heroImage}
-              alt={c.hero_image_alt}
-              width="1536"
-              height="1024"
-              fetchpriority="high"
-            />
-          ) : (
-            <div className="hero-image-empty">
-              <Icon name="upload" size={26} />
-              <span>Hero image not set</span>
-            </div>
-          )}
-        </figure>
       </section>
 
       {/* HOW IT WORKS */}

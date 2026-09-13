@@ -52,141 +52,80 @@
 
 /* ---------------- hero ---------------- */
 .hero-section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: var(--s-16) var(--s-8);
-  max-width: 980px;
-  margin: 0 auto;
+  position: relative;
+  isolation: isolate;
   width: 100%;
+  min-height: min(66vh, 620px);
+  display: grid;
+  place-items: end center;
+  padding: var(--s-16) var(--s-8) var(--s-12);
+  overflow: hidden;
+  background: var(--navy);
 }
 
-/* ---------------- hero image ---------------- */
-.hero-figure {
-  margin: var(--s-10) auto 0;
-  width: 100%;
-  /* Height, not width, is the scarce dimension above the fold: cap the frame
-     and let its width follow. The ratio matches the artwork so the whole
-     photograph shows, uncropped. */
-  max-width: min(100%, calc(52vh * 3 / 2));
-  border-radius: var(--r-xl, 20px);
-  overflow: hidden;
-  box-shadow:
-    0 1px 2px rgba(16, 40, 56, 0.06),
-    0 24px 60px -20px rgba(16, 40, 56, 0.28);
-  background: var(--gray-100);
-}
+/* The photograph fills the whole header. `cover` is right here: the frame is
+   the full width of the page, so the image is shown at its natural shape in
+   the dimension that matters and only the overflow is trimmed. */
 .hero-image {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
-  /* No fixed ratio and no cropping: the image keeps its own proportions. */
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: -2;
 }
 .hero-image-empty {
-  aspect-ratio: 3 / 2;
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--s-3);
-  color: var(--text-3);
+  color: rgba(255, 255, 255, 0.72);
   font-size: var(--t-sm);
-  background:
-    repeating-linear-gradient(
-      45deg,
-      rgba(1, 152, 159, 0.04) 0 12px,
-      rgba(1, 152, 159, 0.08) 12px 24px
-    );
+  background: var(--navy);
+  z-index: -2;
 }
-.hero-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  color: var(--teal-mid);
-  font-size: var(--t-sm);
-  font-weight: 600;
-  padding: 7px 15px;
-  border-radius: var(--r-pill);
-  margin-bottom: var(--s-6);
+
+/* A photograph is never a reliable background for text. This darkens it just
+   enough for white to hold at every viewport, without flattening the image. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to bottom,
+    rgba(9, 26, 38, 0.22) 0%,
+    rgba(9, 26, 38, 0.3) 46%,
+    rgba(9, 26, 38, 0.78) 100%
+  );
 }
-.hero-pill-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--teal);
-  animation: pulseDot 2.4s var(--ease) infinite;
-}
+
 .hero-h1 {
+  position: relative;
+  margin: 0;
   font-size: clamp(34px, 6.4vw, 68px);
   font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.045em;
-  color: var(--navy);
-  margin: 0;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 24px rgba(9, 26, 38, 0.55);
 }
 .hero-h1 em {
   font-style: normal;
   color: var(--teal);
 }
-.hero-lede {
-  font-size: var(--t-lg);
-  color: var(--text-2);
-  max-width: 540px;
-  line-height: 1.72;
-  margin: 0 auto var(--s-8);
-}
-.hero-cta-row {
-  display: flex;
-  gap: var(--s-3);
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: var(--s-8);
-}
-.hero-note {
-  font-size: var(--t-base);
-  color: var(--text-3);
-}
-.hero-proof {
-  display: flex;
-  gap: var(--s-8);
-  justify-content: center;
-  margin-top: var(--s-10);
-  flex-wrap: wrap;
-}
-.proof-item {
-  text-align: center;
-}
-.proof-value {
-  font-size: var(--t-2xl);
-  font-weight: 800;
-  color: var(--navy);
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-}
-.proof-label {
-  font-size: var(--t-sm);
-  color: var(--text-3);
-  margin-top: 2px;
-}
 
 @media (max-width: 768px) {
   .hero-section {
-    padding: var(--s-10) var(--s-5) var(--s-12);
+    min-height: min(56vh, 460px);
+    padding: var(--s-12) var(--s-5);
   }
   .hero-h1 {
     font-size: clamp(28px, 7.4vw, 40px);
-  }
-  .hero-figure {
-    /* On a phone the viewport, not the fold, is the limit. */
-    max-width: 100%;
-    margin-top: var(--s-8);
-    border-radius: var(--r-lg, 14px);
-    box-shadow: 0 12px 30px -14px rgba(16, 40, 56, 0.3);
   }
 }
 
@@ -653,7 +592,8 @@
   height: 0.86em;
   margin-left: 0.06em;
   vertical-align: -0.08em;
-  background: var(--teal);
+  /* Inherits the headline colour, so it stays visible over the photograph. */
+  background: currentColor;
   border-radius: 1px;
 }
 .typewriter-caret.blink {
