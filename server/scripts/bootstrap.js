@@ -41,8 +41,44 @@ async function seedDemoIfEmpty() {
   }
 }
 
+/**
+ * Add site-content entries introduced after a deployment was first seeded.
+ *
+ * The seed only populates an empty database and the admin editor updates rows
+ * rather than creating them, so a key added later would never appear in the
+ * dashboard. Inserting the missing ones on boot keeps every environment in
+ * step without hand-written SQL. Existing values are never touched.
+ */
+const LATER_CMS_KEYS = [
+  ['hero_image_url', '', 'Hero image URL — leave empty to show a placeholder', 5],
+  [
+    'hero_image_alt',
+    'A Tanzanian guide sharing his referral QR code with two travellers below Mount Kilimanjaro',
+    'Hero image description — read aloud by screen readers',
+    6,
+  ],
+];
+
+async function addMissingContentKeys() {
+  let added = 0;
+  for (const [key, value, label, sort] of LATER_CMS_KEYS) {
+    const existing = await queryOne('SELECT content_key FROM cms_content WHERE content_key = ?', [
+      key,
+    ]);
+    if (existing) continue;
+    await execute(
+      `INSERT INTO cms_content (content_key, content_value, value_type, group_name, label, sort_order)
+       VALUES (?, ?, 'text', 'landing', ?, ?)`,
+      [key, value, label, sort],
+    );
+    added += 1;
+  }
+  if (added) console.log(`  Added ${added} new site content ${added === 1 ? 'entry' : 'entries'}.`);
+}
+
 async function main() {
   await seedDemoIfEmpty();
+  await addMissingContentKeys();
 
   const email = String(process.env.ADMIN_EMAIL || '').trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD || '';
